@@ -3,29 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Earn Coins - Bharat Boost Hub</title>
-    <meta name="description" content="Earn coins by watching, liking, and subscribing to other creators' videos.">
-    <meta name="author" content="Bharat Boost Hub">
-
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
         .stat-card { background: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
         .logo-circle { background-color: #ef4444; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.875rem; margin-right: 8px; }
         .action-btn { transition: all 0.2s ease-in-out; }
         .action-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .action-btn:disabled { cursor: not-allowed; background-color: #9ca3af; }
+        .action-btn:disabled { cursor: not-allowed; opacity: 0.6; }
     </style>
 </head>
 <body class="antialiased text-gray-800">
 
-    <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-40">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
             <a href="dashboard.html" class="flex items-center">
@@ -37,60 +28,43 @@
                     <svg class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-3-7a1 1 0 011-1h4a1 1 0 110 2h-1v1a1 1 0 11-2 0V9H7a1 1 0 01-1-1z" /></svg>
                     <span id="coin-count" class="font-semibold text-gray-700">...</span>
                 </div>
-                <a href="login.html" class="text-sm font-medium text-gray-600 hover:text-red-600">Logout</a>
+                <button id="logout-btn" class="text-sm font-medium text-gray-600 hover:text-red-600">Logout</button>
             </div>
         </nav>
     </header>
 
-    <!-- Main Earn Coins Content -->
     <main class="container mx-auto p-4 sm:p-6 lg:p-8">
         <a href="dashboard.html" class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-red-600 mb-6">
             <svg class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
             Back to Dashboard
         </a>
-
         <div class="stat-card max-w-4xl mx-auto">
             <h1 class="text-2xl font-bold text-center mb-2">Watch Videos, Earn Coins</h1>
             <p class="text-gray-600 text-center mb-6">Engage with the video below to earn rewards.</p>
-
-            <!-- Video Player Area -->
             <div id="video-container" class="aspect-video bg-black rounded-lg mb-6 shadow-lg flex items-center justify-center text-white">
                 <p id="loading-text">Loading a video for you...</p>
                 <iframe id="earn-video-player" class="w-full h-full rounded-lg hidden" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
-
-            <!-- Action Buttons -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <button id="like-btn" class="action-btn flex items-center justify-center w-full bg-blue-500 text-white p-3 rounded-lg font-semibold shadow-md">
-                    <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 18.734V6.5A2.5 2.5 0 019.5 4h.001zM7 18.734L7 6.5" /></svg>
-                    Like (+5 Coins)
-                </button>
-                <button id="subscribe-btn" class="action-btn flex items-center justify-center w-full bg-red-600 text-white p-3 rounded-lg font-semibold shadow-md">
-                    <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>
-                    Subscribe (+10)
-                </button>
-                <button id="skip-btn" class="action-btn flex items-center justify-center w-full bg-gray-600 text-white p-3 rounded-lg font-semibold shadow-md">
-                    Skip Video
-                    <svg class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
-                </button>
+                <button id="like-btn" class="action-btn flex items-center justify-center w-full bg-blue-500 text-white p-3 rounded-lg font-semibold shadow-md"><svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 18.734V6.5A2.5 2.5 0 019.5 4h.001zM7 18.734L7 6.5" /></svg>Like (+5 Coins)</button>
+                <button id="subscribe-btn" class="action-btn flex items-center justify-center w-full bg-red-600 text-white p-3 rounded-lg font-semibold shadow-md"><svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>Subscribe (+10)</button>
+                <button id="skip-btn" class="action-btn flex items-center justify-center w-full bg-gray-600 text-white p-3 rounded-lg font-semibold shadow-md">Skip Video<svg class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg></button>
             </div>
         </div>
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, getDocs, collection, query, where, updateDoc, increment, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, getDocs, collection, query, where, runTransaction, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- Firebase Configuration ---
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-        let userId = null;
-        let dbUserRef = null;
+        let currentUserId = null;
         let currentVideo = null;
 
         const coinCountEl = document.getElementById('coin-count');
@@ -99,150 +73,90 @@
         const likeBtn = document.getElementById('like-btn');
         const subscribeBtn = document.getElementById('subscribe-btn');
         const skipBtn = document.getElementById('skip-btn');
+        const logoutBtn = document.getElementById('logout-btn');
 
-        // --- Authentication & Initial Data Load ---
-        onAuthStateChanged(auth, async (user) => {
+        logoutBtn.addEventListener('click', () => signOut(auth));
+
+        onAuthStateChanged(auth, (user) => {
             if (user) {
-                userId = user.uid;
-                dbUserRef = doc(db, `artifacts/${appId}/users/${userId}`);
-                
-                // Listen for real-time coin updates
-                const userDoc = await getDoc(dbUserRef);
-                if (userDoc.exists()) {
-                    coinCountEl.textContent = userDoc.data().coins || 0;
-                }
-                
-                // Load the first video
+                currentUserId = user.uid;
+                // FIX: Set up a listener for the coin count
+                const userRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
+                onSnapshot(userRef, (doc) => {
+                    if (doc.exists()) coinCountEl.textContent = doc.data().coins ?? 0;
+                });
                 loadNextVideo();
             } else {
-                window.location.href = 'login.html';
+                window.location.replace('login.html');
             }
         });
 
-        (async () => {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                await signInWithCustomToken(auth, __initial_auth_token);
-            } else {
-                await signInAnonymously(auth);
-            }
-        })();
-
-        // --- Core Video Logic ---
         async function loadNextVideo() {
             loadingText.textContent = "Finding a new video...";
             player.classList.add('hidden');
             loadingText.classList.remove('hidden');
-            likeBtn.disabled = true;
-            subscribeBtn.disabled = true;
+            [likeBtn, subscribeBtn, skipBtn].forEach(b => b.disabled = true);
 
-            // 1. Fetch all videos from the public collection
             const videosRef = collection(db, `artifacts/${appId}/public/data/videos`);
-            const q = query(videosRef, where("uploaderId", "!=", userId || "")); // Exclude user's own videos
+            const q = query(videosRef, where("uploaderId", "!=", currentUserId || "placeholder")); // Use placeholder to prevent error on first load
             const querySnapshot = await getDocs(q);
             
-            let allVideos = [];
-            querySnapshot.forEach(doc => {
-                allVideos.push({ id: doc.id, ...doc.data() });
-            });
+            const allVideos = [];
+            querySnapshot.forEach(doc => allVideos.push({ id: doc.id, ...doc.data() }));
 
             if (allVideos.length === 0) {
-                loadingText.textContent = "No videos from other users are available right now. Check back later!";
+                loadingText.textContent = "No videos from other users are available. Check back later!";
                 return;
             }
 
-            // 2. Select a random video
             currentVideo = allVideos[Math.floor(Math.random() * allVideos.length)];
-            
-            // 3. Display the video
-            player.src = `https://www.youtube.com/embed/${currentVideo.videoId}?autoplay=1`;
-            player.classList.remove('hidden');
-            loadingText.classList.add('hidden');
-
-            // 4. Check if user has already interacted with this video
-            await checkInteractionStatus();
+            player.src = `https://www.youtube.com/embed/${currentVideo.videoId}?autoplay=1&enablejsapi=1`;
+            player.onload = () => {
+                player.classList.remove('hidden');
+                loadingText.classList.add('hidden');
+                skipBtn.disabled = false;
+                checkInteractionStatus();
+            };
         }
 
         async function checkInteractionStatus() {
-            // Check for 'like'
-            const likeRef = doc(db, `artifacts/${appId}/users/${userId}/likedVideos`, currentVideo.id);
+            if (!currentUserId || !currentVideo) return;
+            const likeRef = doc(db, `artifacts/${appId}/users/${currentUserId}/likedVideos`, currentVideo.id);
             const likeDoc = await getDoc(likeRef);
-            if (likeDoc.exists()) {
-                likeBtn.disabled = true;
-                likeBtn.textContent = 'Liked';
-            } else {
-                likeBtn.disabled = false;
-                likeBtn.innerHTML = `<svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 18.734V6.5A2.5 2.5 0 019.5 4h.001zM7 18.734L7 6.5" /></svg> Like (+5 Coins)`;
-            }
+            likeBtn.disabled = likeDoc.exists();
 
-            // Check for 'subscribe'
-            const subRef = doc(db, `artifacts/${appId}/users/${userId}/subscriptions`, currentVideo.uploaderId);
+            const subRef = doc(db, `artifacts/${appId}/users/${currentUserId}/subscriptions`, currentVideo.uploaderId);
             const subDoc = await getDoc(subRef);
-            if (subDoc.exists()) {
-                subscribeBtn.disabled = true;
-                subscribeBtn.textContent = 'Subscribed';
-            } else {
-                subscribeBtn.disabled = false;
-                subscribeBtn.innerHTML = `<svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg> Subscribe (+10)`;
+            subscribeBtn.disabled = subDoc.exists();
+        }
+
+        async function awardPoints(amount, type) {
+            const button = type === 'like' ? likeBtn : subscribeBtn;
+            if(button.disabled) return;
+            button.disabled = true;
+
+            const interactionRef = type === 'like' 
+                ? doc(db, `artifacts/${appId}/users/${currentUserId}/likedVideos`, currentVideo.id)
+                : doc(db, `artifacts/${appId}/users/${currentUserId}/subscriptions`, currentVideo.uploaderId);
+
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const userRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
+                    const userDoc = await transaction.get(userRef);
+                    if (!userDoc.exists()) throw "User not found";
+                    
+                    const newCoins = (userDoc.data().coins || 0) + amount;
+                    transaction.update(userRef, { coins: newCoins });
+                    transaction.set(interactionRef, { interactedAt: new Date() });
+                });
+            } catch (e) {
+                console.error(`${type} transaction failed: `, e);
+                button.disabled = false;
             }
         }
 
-        // --- Button Click Handlers ---
-        likeBtn.addEventListener('click', async () => {
-            if (!currentVideo || likeBtn.disabled) return;
-            likeBtn.disabled = true;
-
-            const likeRef = doc(db, `artifacts/${appId}/users/${userId}/likedVideos`, currentVideo.id);
-
-            try {
-                await runTransaction(db, async (transaction) => {
-                    const userDoc = await transaction.get(dbUserRef);
-                    if (!userDoc.exists()) {
-                        throw "User document does not exist!";
-                    }
-                    
-                    // Award coins to the current user
-                    const newCoins = (userDoc.data().coins || 0) + 5;
-                    transaction.update(dbUserRef, { coins: newCoins });
-
-                    // Mark this video as liked for the current user
-                    transaction.set(likeRef, { likedAt: new Date() });
-                });
-                coinCountEl.textContent = parseInt(coinCountEl.textContent) + 5;
-                likeBtn.textContent = 'Liked';
-            } catch (e) {
-                console.error("Like transaction failed: ", e);
-                likeBtn.disabled = false; // Re-enable on failure
-            }
-        });
-
-        subscribeBtn.addEventListener('click', async () => {
-            if (!currentVideo || subscribeBtn.disabled) return;
-            subscribeBtn.disabled = true;
-
-            const subRef = doc(db, `artifacts/${appId}/users/${userId}/subscriptions`, currentVideo.uploaderId);
-
-            try {
-                await runTransaction(db, async (transaction) => {
-                    const userDoc = await transaction.get(dbUserRef);
-                    if (!userDoc.exists()) {
-                        throw "User document does not exist!";
-                    }
-
-                    // Award coins to the current user
-                    const newCoins = (userDoc.data().coins || 0) + 10;
-                    transaction.update(dbUserRef, { coins: newCoins });
-
-                    // Mark this creator as subscribed to
-                    transaction.set(subRef, { subscribedAt: new Date() });
-                });
-                coinCountEl.textContent = parseInt(coinCountEl.textContent) + 10;
-                subscribeBtn.textContent = 'Subscribed';
-            } catch (e) {
-                console.error("Subscribe transaction failed: ", e);
-                subscribeBtn.disabled = false;
-            }
-        });
-
+        likeBtn.addEventListener('click', () => awardPoints(5, 'like'));
+        subscribeBtn.addEventListener('click', () => awardPoints(10, 'subscribe'));
         skipBtn.addEventListener('click', loadNextVideo);
     </script>
 </body>
