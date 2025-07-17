@@ -13,7 +13,6 @@
     </style>
 </head>
 <body>
-
     <!-- Header -->
     <header class="bg-red-600 shadow-lg">
         <div class="container mx-auto px-4 sm:px-6 py-3">
@@ -22,18 +21,14 @@
                     <div class="bg-white text-red-600 w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl">BB</div>
                     <div>
                         <h1 class="text-white text-lg font-bold">Bharat Boost Hub</h1>
-                        <p class="text-red-200 text-xs">Subscribe for Updates!</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div class="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full flex items-center space-x-1 text-sm font-semibold">
                         <span class="material-symbols-outlined !text-base">monetization_on</span>
-                        <span>5</span>
+                        <span id="coin-balance">0</span>
                     </div>
-                    <a href="#" class="text-white hover:text-red-200 text-sm font-medium flex items-center space-x-1">
-                        <span class="material-symbols-outlined !text-lg">logout</span>
-                        <span>Logout</span>
-                    </a>
+                    <a href="login.html" class="text-white hover:text-red-200 text-sm font-medium">Logout</a>
                 </div>
             </div>
         </div>
@@ -43,86 +38,28 @@
     <main class="container mx-auto px-4 sm:px-6 py-8">
         <section class="mb-8">
             <h2 class="text-2xl font-bold text-gray-800">Welcome back, Creator! 👋</h2>
-            <p class="text-gray-500">Ready to boost your YouTube channel?</p>
         </section>
 
-        <!-- Grid for main actions -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
             <!-- Left Column -->
             <div class="space-y-6">
-                <!-- Upload Your Video Card -->
                 <div class="card p-6">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <span class="material-symbols-outlined text-red-500">upload</span>
-                        <h3 class="text-lg font-semibold text-gray-800">Upload Your Video</h3>
-                    </div>
-                    <p class="text-gray-500 mb-5 flex items-center space-x-2">
-                        <span class="material-symbols-outlined text-yellow-500 !text-xl">redeem</span>
-                        <span>Your first upload is FREE!</span>
-                    </p>
-                    <a href="upload.html" class="w-full block text-center bg-red-600 text-white py-2.5 rounded-lg font-semibold hover:bg-red-700 transition">Upload Free Video</a>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Upload Your Video</h3>
+                    <a href="upload.html" class="w-full block text-center bg-red-600 text-white py-2.5 rounded-lg font-semibold hover:bg-red-700 transition">Promote Video (Cost: 5 Coins)</a>
                 </div>
-
-                <!-- Earn Coins Card -->
                 <div class="card p-6">
-                    <div class="flex items-center space-x-3 mb-4">
-                        <span class="material-symbols-outlined text-green-500">play_circle</span>
-                        <h3 class="text-lg font-semibold text-gray-800">Earn Coins</h3>
-                    </div>
-                    <p class="text-gray-500 mb-5">Watch, like, and subscribe to other creators' videos to earn coins</p>
-                    <div class="grid grid-cols-3 gap-3 mb-5 text-center">
-                        <div class="bg-red-50 p-3 rounded-lg"><span class="font-bold text-red-600">+5</span><p class="text-xs text-red-800">Watch Video</p></div>
-                        <div class="bg-red-50 p-3 rounded-lg"><span class="font-bold text-red-600">+10</span><p class="text-xs text-red-800">Subscribe</p></div>
-                        <div class="bg-red-50 p-3 rounded-lg"><span class="font-bold text-red-600">+15</span><p class="text-xs text-red-800">Like + Subscribe</p></div>
-                    </div>
-                    <a href="earn.html" class="w-full block text-center bg-red-600 text-white py-2.5 rounded-lg font-semibold hover:bg-red-700 transition">Start Earning Coins</a>
-                </div>
-                 <!-- Pro Tips Card -->
-                <div class="card p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center space-x-2">
-                        <span class="material-symbols-outlined text-yellow-500">tips_and_updates</span>
-                        <span>Pro Tips</span>
-                    </h3>
-                    <ul class="space-y-2 text-gray-600 text-sm list-disc list-inside">
-                        <li>Upload high-quality videos for better engagement</li>
-                        <li>Watch videos completely to earn maximum coins</li>
-                        <li>Engage genuinely with other creators' content</li>
-                        <li>Consistent activity leads to better promotion</li>
-                    </ul>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Earn Coins</h3>
+                    <a href="earn.html" class="w-full block text-center bg-green-500 text-white py-2.5 rounded-lg font-semibold hover:bg-green-600 transition">Start Earning Coins</a>
                 </div>
             </div>
 
             <!-- Right Column -->
-            <div class="space-y-6">
-                <!-- My Videos Card -->
-                <div class="card p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2 flex items-center space-x-2">
-                        <span class="material-symbols-outlined text-red-500">trending_up</span>
-                        <span>My Videos</span>
-                    </h3>
-                    <p class="text-sm text-gray-500 mb-4">Track your uploaded videos and their performance</p>
-                    <div id="my-videos-container" class="space-y-3">
-                        <!-- Placeholder shown if no videos -->
-                        <div id="no-videos-message" class="hidden text-center border-2 border-dashed border-gray-300 p-8 rounded-lg">
-                            <span class="material-symbols-outlined text-gray-400 !text-5xl">cloud_upload</span>
-                            <p class="mt-2 font-semibold text-gray-700">No videos uploaded yet</p>
-                            <p class="text-sm text-gray-500">Upload your first video to see it here!</p>
-                        </div>
-                        <!-- Dynamically populated video list -->
-                        <div id="my-videos-list" class="space-y-3"></div>
-                    </div>
-                </div>
-
-                <!-- Quick Stats Card -->
-                <div class="card p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Stats</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex justify-between items-center text-sm"><span>Total Coins:</span><span class="font-bold text-yellow-600">5</span></li>
-                        <li class="flex justify-between items-center text-sm"><span>Videos Uploaded:</span><span id="videos-uploaded-stat" class="font-bold">0</span></li>
-                        <li class="flex justify-between items-center text-sm"><span>Videos Watched:</span><span class="font-bold">0</span></li>
-                        <li class="flex justify-between items-center text-sm"><span>Free Uploads Left:</span><span class="font-bold text-green-600">1</span></li>
-                    </ul>
+            <div class="card p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">My Promoted Videos</h3>
+                <div id="my-videos-list" class="space-y-3"></div>
+                <div id="no-videos-message" class="hidden text-center border-2 border-dashed border-gray-300 p-8 rounded-lg">
+                    <span class="material-symbols-outlined text-gray-400 !text-5xl">cloud_upload</span>
+                    <p class="mt-2 font-semibold text-gray-700">No videos promoted yet</p>
                 </div>
             </div>
         </div>
@@ -130,30 +67,44 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            function getOrCreateUserId() {
+                let userId = localStorage.getItem('currentUserId');
+                if (!userId) {
+                    userId = 'user_' + Date.now() + Math.random().toString(36).substring(2, 9);
+                    localStorage.setItem('currentUserId', userId);
+                }
+                return userId;
+            }
+            
+            const currentUserId = getOrCreateUserId();
+            const coinBalanceEl = document.getElementById('coin-balance');
             const myVideosList = document.getElementById('my-videos-list');
             const noVideosMessage = document.getElementById('no-videos-message');
-            const videosUploadedStat = document.getElementById('videos-uploaded-stat');
 
-            const promotedVideos = JSON.parse(localStorage.getItem('promotedVideos')) || [];
-            
-            videosUploadedStat.textContent = promotedVideos.length;
+            // Set initial coins if it's the very first visit
+            if (localStorage.getItem('userCoins') === null) {
+                localStorage.setItem('userCoins', '5');
+            }
+            coinBalanceEl.textContent = localStorage.getItem('userCoins');
 
-            if (promotedVideos.length === 0) {
+            // Fetch all videos and filter for the current user's uploads
+            const allPromotedVideos = JSON.parse(localStorage.getItem('promotedVideos')) || [];
+            const myVideos = allPromotedVideos.filter(video => video.uploaderId === currentUserId);
+
+            if (myVideos.length === 0) {
                 noVideosMessage.classList.remove('hidden');
             } else {
-                promotedVideos.forEach(videoUrl => {
-                    const videoId = getYouTubeVideoId(videoUrl);
+                myVideos.forEach(videoData => {
+                    const videoId = getYouTubeVideoId(videoData.url);
                     if (videoId) {
-                        const videoItem = `
-                            <a href="${videoUrl}" target="_blank" class="flex items-center space-x-4 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                        myVideosList.innerHTML += `
+                            <a href="${videoData.url}" target="_blank" class="flex items-center space-x-4 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
                                 <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg" alt="thumbnail" class="w-20 h-14 object-cover rounded-md">
                                 <div class="overflow-hidden">
-                                    <p class="text-sm font-semibold text-gray-800 truncate">Video URL</p>
-                                    <p class="text-xs text-gray-500 truncate">${videoUrl}</p>
+                                    <p class="text-sm font-semibold text-gray-800 truncate">${videoData.url}</p>
                                 </div>
                             </a>
                         `;
-                        myVideosList.innerHTML += videoItem;
                     }
                 });
             }
