@@ -4,160 +4,266 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Earn Coins - Bharat Boost Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
-        .stat-card { background: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
-        .logo-circle { background-color: #ef4444; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.875rem; margin-right: 8px; }
-        .action-btn { transition: all 0.2s ease-in-out; }
-        .action-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .action-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+        /* --- General Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            color: #1c1e21;
+        }
+
+        .page-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #dddfe2;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo .icon-placeholder {
+            width: 32px;
+            height: 32px;
+            background-color: #FF0000;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .header-logo .logo-text {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .header-actions a {
+            text-decoration: none;
+            color: #606770;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+        
+        /* --- Back Link --- */
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #606770;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* --- Main Content Card --- */
+        .content-card {
+            background-color: #ffffff;
+            border: 1px solid #dddfe2;
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- Video Player --- */
+        .video-player-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #000;
+        }
+
+        .video-player-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* --- Action Controls --- */
+        .action-controls {
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .action-info {
+            color: #606770;
+            margin-bottom: 16px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .like-button {
+            background-color: #e7f3ff;
+            color: #1877f2;
+        }
+        .like-button:hover {
+            background-color: #dcebff;
+        }
+
+        .subscribe-button {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .subscribe-button:hover {
+            background-color: #ffcdd2;
+        }
+
+        .next-button {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #42b72a;
+            color: white;
+            padding: 14px;
+        }
+        .next-button:hover {
+            background-color: #36a420;
+        }
+
     </style>
 </head>
-<body class="antialiased text-gray-800">
+<body>
 
-    <header class="bg-white shadow-sm sticky top-0 z-40">
-        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-            <a href="dashboard.html" class="flex items-center">
-                <div class="logo-circle">BB</div>
-                <span class="font-bold text-lg text-gray-800">Bharat Boost Hub</span>
-            </a>
-            <div class="flex items-center space-x-4 sm:space-x-6">
-                <div class="flex items-center space-x-2">
-                    <svg class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-3-7a1 1 0 011-1h4a1 1 0 110 2h-1v1a1 1 0 11-2 0V9H7a1 1 0 01-1-1z" /></svg>
-                    <span id="coin-count" class="font-semibold text-gray-700">...</span>
-                </div>
-                <button id="logout-btn" class="text-sm font-medium text-gray-600 hover:text-red-600">Logout</button>
-            </div>
-        </nav>
+    <header>
+        <div class="header-logo">
+            <div class="icon-placeholder">BB</div>
+            <span class="logo-text">Bharat Boost Hub</span>
+        </div>
+        <div class="header-actions">
+            <a href="#">Logout</a>
+        </div>
     </header>
 
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-        <a href="dashboard.html" class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-red-600 mb-6">
-            <svg class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+    <div class="page-container">
+        <a href="#" class="back-link">
+            <span class="material-symbols-outlined">arrow_back</span>
             Back to Dashboard
         </a>
-        <div class="stat-card max-w-4xl mx-auto">
-            <h1 class="text-2xl font-bold text-center mb-2">Watch Videos, Earn Coins</h1>
-            <p class="text-gray-600 text-center mb-6">Engage with the video below to earn rewards.</p>
-            <div id="video-container" class="aspect-video bg-black rounded-lg mb-6 shadow-lg flex items-center justify-center text-white">
-                <p id="loading-text">Loading a video for you...</p>
-                <iframe id="earn-video-player" class="w-full h-full rounded-lg hidden" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+        <div class="content-card">
+            <!-- YouTube Video Player -->
+            <div id="video-player" class="video-player-container">
+                <!-- Iframe will be inserted here by JavaScript -->
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <button id="like-btn" class="action-btn flex items-center justify-center w-full bg-blue-500 text-white p-3 rounded-lg font-semibold shadow-md"><svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 18.734V6.5A2.5 2.5 0 019.5 4h.001zM7 18.734L7 6.5" /></svg>Like (+5 Coins)</button>
-                <button id="subscribe-btn" class="action-btn flex items-center justify-center w-full bg-red-600 text-white p-3 rounded-lg font-semibold shadow-md"><svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>Subscribe (+10)</button>
-                <button id="skip-btn" class="action-btn flex items-center justify-center w-full bg-gray-600 text-white p-3 rounded-lg font-semibold shadow-md">Skip Video<svg class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg></button>
+
+            <!-- Action Buttons and Info -->
+            <div class="action-controls">
+                <p class="action-info">Interact with the video to earn coins</p>
+
+                <div class="action-buttons">
+                    <button class="action-button like-button" onclick="handleLike()">
+                        <span class="material-symbols-outlined">thumb_up</span>
+                        Like (+5 Coins)
+                    </button>
+                    <button class="action-button subscribe-button" onclick="handleSubscribe()">
+                        <span class="material-symbols-outlined">subscriptions</span>
+                        Subscribe (+10 Coins)
+                    </button>
+                </div>
+
+                <button class="action-button next-button" onclick="loadNextVideo()">
+                    Next Video
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
             </div>
         </div>
-    </main>
+    </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, getDocs, collection, query, where, runTransaction, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <script>
+        const videoPlayer = document.getElementById('video-player');
+        
+        // --- Sample Data: An array of YouTube video IDs ---
+        // In a real application, you would fetch this list from your server.
+        const videoPlaylist = [
+            'dQw4w9WgXcQ', // Rick Astley - Never Gonna Give You Up
+            '3JZ_D3ELwOQ', // Cute Cat Video
+            'kJQP7kiw5Fk', // Lofi Hip Hop Radio
+            'jfKfPfyJRdk'  // A Scenic Drone Video
+        ];
 
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        let currentVideoIndex = 0;
 
-        let currentUserId = null;
-        let currentVideo = null;
+        function loadVideo(videoId) {
+            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1`;
+            videoPlayer.innerHTML = `<iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+        }
 
-        const coinCountEl = document.getElementById('coin-count');
-        const player = document.getElementById('earn-video-player');
-        const loadingText = document.getElementById('loading-text');
-        const likeBtn = document.getElementById('like-btn');
-        const subscribeBtn = document.getElementById('subscribe-btn');
-        const skipBtn = document.getElementById('skip-btn');
-        const logoutBtn = document.getElementById('logout-btn');
+        function loadNextVideo() {
+            // Move to the next video in the playlist
+            currentVideoIndex = (currentVideoIndex + 1) % videoPlaylist.length;
+            const nextVideoId = videoPlaylist[currentVideoIndex];
+            loadVideo(nextVideoId);
+        }
 
-        logoutBtn.addEventListener('click', () => signOut(auth));
+        function handleLike() {
+            // In a real application, you would verify the "like" on YouTube via their API
+            // and then credit the user's account.
+            alert("Thank you for liking! +5 coins have been added to your account (simulation).");
+        }
+        
+        function handleSubscribe() {
+            // This would redirect to the channel and you'd use YouTube's API to confirm subscription
+            const currentVideoId = videoPlaylist[currentVideoIndex];
+            // This is a generic link to a video, a real link should go to the channel.
+            // For now, we'll just simulate the action.
+            alert("Thank you for subscribing! +10 coins credited (simulation). Opening channel in a new tab.");
+            // Example of opening a channel (replace 'UC...' with a real channel ID)
+            // window.open('https://www.youtube.com/channel/UC-lHJZR3Gqxm24_Vd_AJ5Yw', '_blank');
+        }
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUserId = user.uid;
-                // FIX: Set up a listener for the coin count
-                const userRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
-                onSnapshot(userRef, (doc) => {
-                    if (doc.exists()) coinCountEl.textContent = doc.data().coins ?? 0;
-                });
-                loadNextVideo();
-            } else {
-                window.location.replace('login.html');
-            }
+        // --- Initial Load ---
+        // Load the first video when the page opens.
+        document.addEventListener('DOMContentLoaded', () => {
+            loadVideo(videoPlaylist[currentVideoIndex]);
         });
-
-        async function loadNextVideo() {
-            loadingText.textContent = "Finding a new video...";
-            player.classList.add('hidden');
-            loadingText.classList.remove('hidden');
-            [likeBtn, subscribeBtn, skipBtn].forEach(b => b.disabled = true);
-
-            const videosRef = collection(db, `artifacts/${appId}/public/data/videos`);
-            const q = query(videosRef, where("uploaderId", "!=", currentUserId || "placeholder")); // Use placeholder to prevent error on first load
-            const querySnapshot = await getDocs(q);
-            
-            const allVideos = [];
-            querySnapshot.forEach(doc => allVideos.push({ id: doc.id, ...doc.data() }));
-
-            if (allVideos.length === 0) {
-                loadingText.textContent = "No videos from other users are available. Check back later!";
-                return;
-            }
-
-            currentVideo = allVideos[Math.floor(Math.random() * allVideos.length)];
-            player.src = `https://www.youtube.com/embed/${currentVideo.videoId}?autoplay=1&enablejsapi=1`;
-            player.onload = () => {
-                player.classList.remove('hidden');
-                loadingText.classList.add('hidden');
-                skipBtn.disabled = false;
-                checkInteractionStatus();
-            };
-        }
-
-        async function checkInteractionStatus() {
-            if (!currentUserId || !currentVideo) return;
-            const likeRef = doc(db, `artifacts/${appId}/users/${currentUserId}/likedVideos`, currentVideo.id);
-            const likeDoc = await getDoc(likeRef);
-            likeBtn.disabled = likeDoc.exists();
-
-            const subRef = doc(db, `artifacts/${appId}/users/${currentUserId}/subscriptions`, currentVideo.uploaderId);
-            const subDoc = await getDoc(subRef);
-            subscribeBtn.disabled = subDoc.exists();
-        }
-
-        async function awardPoints(amount, type) {
-            const button = type === 'like' ? likeBtn : subscribeBtn;
-            if(button.disabled) return;
-            button.disabled = true;
-
-            const interactionRef = type === 'like' 
-                ? doc(db, `artifacts/${appId}/users/${currentUserId}/likedVideos`, currentVideo.id)
-                : doc(db, `artifacts/${appId}/users/${currentUserId}/subscriptions`, currentVideo.uploaderId);
-
-            try {
-                await runTransaction(db, async (transaction) => {
-                    const userRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
-                    const userDoc = await transaction.get(userRef);
-                    if (!userDoc.exists()) throw "User not found";
-                    
-                    const newCoins = (userDoc.data().coins || 0) + amount;
-                    transaction.update(userRef, { coins: newCoins });
-                    transaction.set(interactionRef, { interactedAt: new Date() });
-                });
-            } catch (e) {
-                console.error(`${type} transaction failed: `, e);
-                button.disabled = false;
-            }
-        }
-
-        likeBtn.addEventListener('click', () => awardPoints(5, 'like'));
-        subscribeBtn.addEventListener('click', () => awardPoints(10, 'subscribe'));
-        skipBtn.addEventListener('click', loadNextVideo);
     </script>
+
 </body>
 </html>
