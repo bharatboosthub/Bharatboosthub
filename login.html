@@ -33,53 +33,69 @@
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
             font-weight: bold; font-size: 1.25rem; margin-right: 12px;
         }
+        .view { display: none; }
+        .view.active { display: block; }
     </style>
 </head>
 <body class="antialiased">
 
     <div class="flex flex-col items-center justify-center min-h-screen px-4">
         
+        <!-- Logo Header -->
         <div class="text-center mb-8">
-            <a href="./index.html" class="inline-flex items-center mb-4">
+            <div class="inline-flex items-center mb-4">
                 <div class="logo-circle">BB</div>
                 <h1 class="text-2xl font-bold text-white">Bharat Boost Hub</h1>
-            </a>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-white">Welcome Back!</h2>
-            <p class="text-gray-400">Sign in to continue to your dashboard.</p>
+            </div>
         </div>
 
-        <div class="glass-card p-8 rounded-xl shadow-2xl w-full max-w-md">
-            <form id="login-form">
-                <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
-                    <input type="email" id="email" required
-                           class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white">
-                </div>
-                <div class="mb-6">
-                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
-                    <input type="password" id="password" required
-                           class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white">
-                </div>
-                <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-lg hover:shadow-red-500/50">
-                    Sign In
-                </button>
-            </form>
-            <p id="feedback-message" class="text-center text-sm mt-4 h-5"></p>
-            <p class="text-center text-sm text-gray-400 mt-6">
-                Don't have an account? 
-                <a href="./signup.html" class="font-medium text-red-500 hover:text-red-400">Sign Up</a>
-            </p>
+        <!-- Login View -->
+        <div id="login-view" class="view active w-full max-w-md">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white">Welcome Back!</h2>
+                <p class="text-gray-400">Sign in to continue to your dashboard.</p>
+            </div>
+            <div class="glass-card p-8 rounded-xl shadow-2xl">
+                <form id="login-form">
+                    <div class="mb-4"><label for="login-email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label><input type="email" id="login-email" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white"></div>
+                    <div class="mb-6"><label for="login-password" class="block text-sm font-medium text-gray-300 mb-2">Password</label><input type="password" id="login-password" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white"></div>
+                    <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">Sign In</button>
+                </form>
+                <p id="login-feedback" class="text-center text-sm mt-4 h-5"></p>
+                <p class="text-center text-sm text-gray-400 mt-6">Don't have an account? <a href="#" id="show-signup" class="font-medium text-red-500 hover:text-red-400">Sign Up</a></p>
+            </div>
         </div>
-         <div class="mt-8">
-            <a href="./index.html" class="text-sm text-gray-400 hover:text-white transition-colors flex items-center">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Back to Home
-            </a>
+
+        <!-- Sign Up View -->
+        <div id="signup-view" class="view w-full max-w-md">
+            <div class="text-center mb-8">
+                 <h2 class="text-3xl md:text-4xl font-extrabold text-white">Create Your Account</h2>
+                 <p class="text-gray-400">Let's get you started.</p>
+            </div>
+            <div class="glass-card p-8 rounded-xl shadow-2xl">
+                <form id="signup-form">
+                    <div class="mb-4"><label for="signup-email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label><input type="email" id="signup-email" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white"></div>
+                    <div class="mb-6"><label for="signup-password" class="block text-sm font-medium text-gray-300 mb-2">Password</label><input type="password" id="signup-password" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white"></div>
+                    <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">Send Verification Link</button>
+                </form>
+                <p id="signup-feedback" class="text-center text-sm mt-4 h-5"></p>
+                <p class="text-center text-sm text-gray-400 mt-6">Already have an account? <a href="#" id="show-login" class="font-medium text-red-500 hover:text-red-400">Sign In</a></p>
+            </div>
         </div>
+
+        <!-- Verification Pending View -->
+        <div id="verification-view" class="view w-full max-w-md text-center">
+             <div class="glass-card p-8 rounded-xl shadow-2xl">
+                <h2 class="text-2xl font-bold text-white mb-4">Check Your Email</h2>
+                <p class="text-gray-300">We've sent a verification link to <strong id="verification-email" class="text-white"></strong>.</p>
+                <p class="text-gray-400 mt-2 text-sm">Click the link to complete your sign-up. You can close this tab.</p>
+             </div>
+        </div>
+
     </div>
 
     <script type="module">
-        // Your project's Firebase configuration with details from the image
+        // Your project's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBOnW5Mv5YYquR1I9_Nn1ViprMVV00ubbM",
             authDomain: "bharat-boost-hub.firebaseapp.com",
@@ -89,36 +105,125 @@
             appId: "1:1047323522415:web:a1b2c3d4e5f6g7h8i9j0" // Example App ID
         };
 
+        // Import Firebase services
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, updatePassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
+        // --- View Switching Logic ---
+        const loginView = document.getElementById('login-view');
+        const signupView = document.getElementById('signup-view');
+        const verificationView = document.getElementById('verification-view');
+        const showSignupBtn = document.getElementById('show-signup');
+        const showLoginBtn = document.getElementById('show-login');
+
+        function showView(view) {
+            loginView.classList.remove('active');
+            signupView.classList.remove('active');
+            verificationView.classList.remove('active');
+            view.classList.add('active');
+        }
+
+        showSignupBtn.addEventListener('click', (e) => { e.preventDefault(); showView(signupView); });
+        showLoginBtn.addEventListener('click', (e) => { e.preventDefault(); showView(loginView); });
+
+        // --- Sign-Up Logic ---
+        const signupForm = document.getElementById('signup-form');
+        const signupFeedback = document.getElementById('signup-feedback');
+        
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            signupFeedback.textContent = '';
+            signupFeedback.classList.remove('text-red-500', 'text-green-500');
+
+            // Action code settings for the verification link
+            const actionCodeSettings = {
+                url: window.location.href, // Redirect back to this same page
+                handleCodeInApp: true,
+            };
+
+            sendSignInLinkToEmail(auth, email, actionCodeSettings)
+                .then(() => {
+                    // Store email and password temporarily
+                    window.localStorage.setItem('emailForSignIn', email);
+                    window.localStorage.setItem('passwordForSignUp', password);
+                    
+                    // Show verification message
+                    document.getElementById('verification-email').textContent = email;
+                    showView(verificationView);
+                })
+                .catch((error) => {
+                    console.error("Error sending email link:", error);
+                    signupFeedback.textContent = 'Could not send verification email. Try again.';
+                    signupFeedback.classList.add('text-red-500');
+                });
+        });
+
+        // --- Handle Verification Link Click ---
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = window.localStorage.getItem('emailForSignIn');
+            if (!email) {
+                // This can happen if the user opens the link on a different device.
+                // Prompt the user for their email.
+                email = window.prompt('Please provide your email for confirmation');
+            }
+            
+            signInWithEmailLink(auth, email, window.location.href)
+                .then((result) => {
+                    // User is signed in. Now, set their password.
+                    const password = window.localStorage.getItem('passwordForSignUp');
+                    if (password) {
+                        updatePassword(result.user, password).then(() => {
+                            // Clear stored items
+                            window.localStorage.removeItem('emailForSignIn');
+                            window.localStorage.removeItem('passwordForSignUp');
+                            // Redirect to dashboard
+                            window.location.href = './dashboard.html';
+                        }).catch((error) => {
+                            console.error("Error setting password:", error);
+                            alert("Could not set your password. Please contact support.");
+                        });
+                    } else {
+                         // This case is unlikely but handled for safety
+                        alert("Your account is created but no password was set. Please use 'Forgot Password' to set one.");
+                        window.location.href = './dashboard.html';
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error signing in with email link:", error);
+                    alert("Invalid verification link. Please try signing up again.");
+                    showView(signupView);
+                });
+        }
+
+        // --- Login Logic ---
         const loginForm = document.getElementById('login-form');
-        const feedbackMessage = document.getElementById('feedback-message');
+        const loginFeedback = document.getElementById('login-feedback');
 
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = loginForm.email.value;
-            const password = loginForm.password.value;
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
             
-            feedbackMessage.textContent = '';
-            feedbackMessage.classList.remove('text-red-500', 'text-green-500');
+            loginFeedback.textContent = '';
+            loginFeedback.classList.remove('text-red-500', 'text-green-500');
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    const user = userCredential.user;
-                    feedbackMessage.textContent = 'Login successful! Redirecting...';
-                    feedbackMessage.classList.add('text-green-500');
+                    loginFeedback.textContent = 'Login successful! Redirecting...';
+                    loginFeedback.classList.add('text-green-500');
                     setTimeout(() => {
                         window.location.href = './dashboard.html';
-                    }, 2000);
+                    }, 1500);
                 })
                 .catch((error) => {
-                    feedbackMessage.textContent = 'Invalid email or password. Please try again.';
-                    feedbackMessage.classList.add('text-red-500');
-                    console.error("Firebase login error:", error);
+                    loginFeedback.textContent = 'Invalid email or password.';
+                    loginFeedback.classList.add('text-red-500');
                 });
         });
     </script>
