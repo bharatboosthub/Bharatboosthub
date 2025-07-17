@@ -4,266 +4,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Earn Coins - Bharat Boost Hub</title>
-    <!-- Google Icons -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-        /* --- General Styles --- */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
-            color: #1c1e21;
-        }
-
-        .page-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* --- Header --- */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #ffffff;
-            padding: 10px 20px;
-            border-bottom: 1px solid #dddfe2;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-logo .icon-placeholder {
-            width: 32px;
-            height: 32px;
-            background-color: #FF0000;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-weight: bold;
-            font-size: 1em;
-        }
-
-        .header-logo .logo-text {
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        .header-actions a {
-            text-decoration: none;
-            color: #606770;
-            font-weight: 500;
-            font-size: 0.9em;
-        }
-        
-        /* --- Back Link --- */
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #606770;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* --- Main Content Card --- */
-        .content-card {
-            background-color: #ffffff;
-            border: 1px solid #dddfe2;
-            border-radius: 8px;
-            padding: 24px;
-            margin-top: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        /* --- Video Player --- */
-        .video-player-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
-            border-radius: 8px;
-            background-color: #000;
-        }
-
-        .video-player-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        /* --- Action Controls --- */
-        .action-controls {
-            margin-top: 24px;
-            text-align: center;
-        }
-
-        .action-info {
-            color: #606770;
-            margin-bottom: 16px;
-        }
-        
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-
-        .action-button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .like-button {
-            background-color: #e7f3ff;
-            color: #1877f2;
-        }
-        .like-button:hover {
-            background-color: #dcebff;
-        }
-
-        .subscribe-button {
-            background-color: #ffebee;
-            color: #c62828;
-        }
-        .subscribe-button:hover {
-            background-color: #ffcdd2;
-        }
-
-        .next-button {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            background-color: #42b72a;
-            color: white;
-            padding: 14px;
-        }
-        .next-button:hover {
-            background-color: #36a420;
-        }
-
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style> 
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; } 
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-logo">
-            <div class="icon-placeholder">BB</div>
-            <span class="logo-text">Bharat Boost Hub</span>
-        </div>
-        <div class="header-actions">
-            <a href="#">Logout</a>
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">BB</div>
+                <h1 class="text-lg font-bold text-gray-800">Bharat Boost Hub</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-400">...</span>
+                <a href="#" class="text-gray-700 hover:text-red-600 text-sm font-medium">Logout</a>
+            </div>
         </div>
     </header>
 
-    <div class="page-container">
-        <a href="#" class="back-link">
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <a href="dashboard.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6">
             <span class="material-symbols-outlined">arrow_back</span>
-            Back to Dashboard
+            <span class="ml-1">Back to Dashboard</span>
         </a>
 
-        <div class="content-card">
-            <!-- YouTube Video Player -->
-            <div id="video-player" class="video-player-container">
-                <!-- Iframe will be inserted here by JavaScript -->
+        <div id="earn-container" class="bg-white p-6 sm:p-8 rounded-lg shadow-md max-w-3xl mx-auto">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Watch Videos, Earn Coins</h2>
+                <p class="text-gray-500 mt-1">Engage with the video below to earn rewards.</p>
+            </div>
+            
+            <div id="video-player-area" class="mb-6 aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center text-gray-400">
+                <!-- YouTube Iframe or loading message will be here -->
+                <span>Loading a video for you...</span>
             </div>
 
-            <!-- Action Buttons and Info -->
-            <div class="action-controls">
-                <p class="action-info">Interact with the video to earn coins</p>
-
-                <div class="action-buttons">
-                    <button class="action-button like-button" onclick="handleLike()">
-                        <span class="material-symbols-outlined">thumb_up</span>
-                        Like (+5 Coins)
-                    </button>
-                    <button class="action-button subscribe-button" onclick="handleSubscribe()">
-                        <span class="material-symbols-outlined">subscriptions</span>
-                        Subscribe (+10 Coins)
-                    </button>
-                </div>
-
-                <button class="action-button next-button" onclick="loadNextVideo()">
-                    Next Video
+            <div id="action-buttons" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <button id="like-btn" class="w-full bg-blue-500 text-white font-bold py-3 rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center space-x-2">
+                    <span class="material-symbols-outlined">thumb_up</span>
+                    <span>Like (+5 Coins)</span>
+                </button>
+                <button id="subscribe-btn" class="w-full bg-red-600 text-white font-bold py-3 rounded-lg hover:bg-red-700 transition-all flex items-center justify-center space-x-2">
+                    <span class="material-symbols-outlined">subscriptions</span>
+                    <span>Subscribe (+10)</span>
+                </button>
+                <button id="skip-btn" class="w-full bg-gray-600 text-white font-bold py-3 rounded-lg hover:bg-gray-700 transition-all flex items-center justify-center space-x-2">
+                    <span>Skip Video</span>
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </button>
             </div>
         </div>
-    </div>
+        
+        <div id="no-videos-container" class="hidden text-center bg-white p-12 rounded-lg shadow-md max-w-3xl mx-auto">
+            <h3 class="text-2xl font-bold text-green-600">All Caught Up!</h3>
+            <p class="text-gray-600 mt-2">You have watched all available videos for now. Please check back later for more content to review!</p>
+        </div>
+    </main>
 
     <script>
-        const videoPlayer = document.getElementById('video-player');
-        
-        // --- Sample Data: An array of YouTube video IDs ---
-        // In a real application, you would fetch this list from your server.
-        const videoPlaylist = [
-            'dQw4w9WgXcQ', // Rick Astley - Never Gonna Give You Up
-            '3JZ_D3ELwOQ', // Cute Cat Video
-            'kJQP7kiw5Fk', // Lofi Hip Hop Radio
-            'jfKfPfyJRdk'  // A Scenic Drone Video
-        ];
-
-        let currentVideoIndex = 0;
-
-        function loadVideo(videoId) {
-            const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1`;
-            videoPlayer.innerHTML = `<iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-        }
-
-        function loadNextVideo() {
-            // Move to the next video in the playlist
-            currentVideoIndex = (currentVideoIndex + 1) % videoPlaylist.length;
-            const nextVideoId = videoPlaylist[currentVideoIndex];
-            loadVideo(nextVideoId);
-        }
-
-        function handleLike() {
-            // In a real application, you would verify the "like" on YouTube via their API
-            // and then credit the user's account.
-            alert("Thank you for liking! +5 coins have been added to your account (simulation).");
-        }
-        
-        function handleSubscribe() {
-            // This would redirect to the channel and you'd use YouTube's API to confirm subscription
-            const currentVideoId = videoPlaylist[currentVideoIndex];
-            // This is a generic link to a video, a real link should go to the channel.
-            // For now, we'll just simulate the action.
-            alert("Thank you for subscribing! +10 coins credited (simulation). Opening channel in a new tab.");
-            // Example of opening a channel (replace 'UC...' with a real channel ID)
-            // window.open('https://www.youtube.com/channel/UC-lHJZR3Gqxm24_Vd_AJ5Yw', '_blank');
-        }
-
-        // --- Initial Load ---
-        // Load the first video when the page opens.
         document.addEventListener('DOMContentLoaded', () => {
-            loadVideo(videoPlaylist[currentVideoIndex]);
+            const videoPlayerArea = document.getElementById('video-player-area');
+            const likeBtn = document.getElementById('like-btn');
+            const subscribeBtn = document.getElementById('subscribe-btn');
+            const skipBtn = document.getElementById('skip-btn');
+            const earnContainer = document.getElementById('earn-container');
+            const noVideosContainer = document.getElementById('no-videos-container');
+
+            let allVideos = JSON.parse(localStorage.getItem('promotedVideos')) || [];
+            let currentVideoIndex = 0;
+
+            function loadVideo(index) {
+                // Check if videos are available and the index is valid
+                if (allVideos.length > 0 && index < allVideos.length) {
+                    earnContainer.classList.remove('hidden');
+                    noVideosContainer.classList.add('hidden');
+
+                    const videoUrl = allVideos[index];
+                    const videoId = getYouTubeVideoId(videoUrl);
+                    if (videoId) {
+                        videoPlayerArea.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                    }
+                } else {
+                    // No more videos to show
+                    earnContainer.classList.add('hidden');
+                    noVideosContainer.classList.remove('hidden');
+                }
+            }
+
+            likeBtn.addEventListener('click', () => {
+                const currentVideoUrl = allVideos[currentVideoIndex];
+                if (currentVideoUrl) {
+                    alert('Opening YouTube in a new tab. Please LIKE the video there to earn your coins!');
+                    window.open(currentVideoUrl, '_blank');
+                }
+            });
+
+            subscribeBtn.addEventListener('click', () => {
+                const currentVideoUrl = allVideos[currentVideoIndex];
+                if (currentVideoUrl) {
+                    alert('Opening YouTube in a new tab. Please SUBSCRIBE to the channel for your reward!');
+                    window.open(currentVideoUrl, '_blank');
+                }
+            });
+
+            skipBtn.addEventListener('click', () => {
+                currentVideoIndex++;
+                loadVideo(currentVideoIndex);
+            });
+
+            function getYouTubeVideoId(url) {
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[2].length === 11) ? match[2] : null;
+            }
+
+            // --- Initial Load ---
+            loadVideo(currentVideoIndex);
         });
     </script>
-
 </body>
 </html>
