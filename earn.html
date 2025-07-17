@@ -9,25 +9,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-
-    <!-- Your Firebase SDK and Configuration -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyBOnW5Mv5YYquR1I9_Nn1ViprMVVOoubbM",
-        authDomain: "bharat-boost-hub.firebaseapp.com",
-        projectId: "bharat-boost-hub",
-        storageBucket: "bharat-boost-hub.appspot.com",
-        messagingSenderId: "1047323522415",
-        appId: "1:1047323522415:web:4972c0bce15ae7253de49a",
-        measurementId: "G-71J9272S91"
-      };
-      firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-      const db = firebase.firestore();
-    </script>
     
     <style> body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; } </style>
 </head>
@@ -57,26 +38,19 @@
         const startTaskBtn = document.getElementById('start-task-btn');
         const claimBtn = document.getElementById('claim-btn');
         
-        let currentUser;
-        let videosToWatch = [];
+        const currentUserId = localStorage.getItem('currentUserId');
+        const allPromotedVideos = JSON.parse(localStorage.getItem('promotedVideos')) || [];
+        
+        // ** THE CORE FEATURE: FILTER OUT THE USER'S OWN VIDEOS **
+        const videosToWatch = allPromotedVideos.filter(video => video.uploaderId !== currentUserId);
+        
         let currentVideoIndex = 0;
         const requiredWatchTime = 3 * 60 * 1000;
         let timerInterval;
 
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                currentUser = user;
-                loadVideosToWatch(user.uid);
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-
-        async function loadVideosToWatch(userId) {
-            const videosSnapshot = await db.collection('videos').where('uploaderId', '!=', userId).get();
-            videosToWatch = videosSnapshot.docs.map(doc => doc.data());
+        document.addEventListener('DOMContentLoaded', () => {
             checkTaskStateOnLoad();
-        }
+        });
 
         function switchView(viewToShow) {
             [startView, waitingView, claimView].forEach(v => v.classList.add('hidden'));
@@ -116,11 +90,10 @@
             }
         }
 
-        async function claimReward() {
-            const userDocRef = db.collection('users').doc(currentUser.uid);
-            await userDocRef.update({
-                coins: firebase.firestore.FieldValue.increment(1)
-            });
+        function claimReward() {
+            let currentCoins = parseInt(localStorage.getItem('userCoins') || '0');
+            currentCoins += 1; // User earns 1 coin
+            localStorage.setItem('userCoins', currentCoins);
             
             localStorage.removeItem('taskStartTime');
             localStorage.removeItem('taskVideoUrl');
@@ -131,7 +104,7 @@
             loadVideoForTask(currentVideoIndex);
         }
 
-        function checkTaskStateOnLoad() {
+        function checkTaskStateOnLoad() {.
             const startTime = localStorage.getItem('taskStartTime');
             if (startTime) {
                 const remainingTime = Math.max(0, requiredWatchTime - (Date.now() - startTime));
