@@ -9,25 +9,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-
-    <!-- Your Firebase SDK and Configuration -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyBOnW5Mv5YYquR1I9_Nn1ViprMVVOoubbM",
-        authDomain: "bharat-boost-hub.firebaseapp.com",
-        projectId: "bharat-boost-hub",
-        storageBucket: "bharat-boost-hub.appspot.com",
-        messagingSenderId: "1047323522415",
-        appId: "1:1047323522415:web:4972c0bce15ae7253de49a",
-        measurementId: "G-71J9272S91"
-      };
-      firebase.initializeApp(firebaseConfig);
-      const auth = firebase.auth();
-      const db = firebase.firestore();
-    </script>
     
     <style> body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; } </style>
 </head>
@@ -37,8 +18,6 @@
     <main class="container mx-auto px-6 py-8">
         <a href="dashboard.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 font-medium transition-colors"><span class="material-symbols-outlined">arrow_back</span><span class="ml-1">Back to Dashboard</span></a>
         
-        <div id="loading-view" class="text-center p-8"><svg class="animate-spin h-8 w-8 text-red-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg></div>
-
         <div id="upload-view" class="hidden bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
             <div class="text-center"><h2 class="text-2xl font-bold text-gray-800">Promote Your Video</h2><p class="text-gray-500 mt-2">Enter the URL of the YouTube video you want to promote.</p><p class="text-sm font-semibold text-red-600 mt-2">Cost: 5 Coins</p></div>
             <form id="promotion-form" class="mt-8 space-y-6">
@@ -56,71 +35,54 @@
 
     <script>
         const coinBalanceEl = document.getElementById('coin-balance');
-        const loadingView = document.getElementById('loading-view');
         const uploadView = document.getElementById('upload-view');
         const insufficientFundsView = document.getElementById('insufficient-funds-view');
         const promotionForm = document.getElementById('promotion-form');
         const videoUrlInput = document.getElementById('video-url');
         const videoPreview = document.getElementById('video-preview');
         
-        let currentUser;
-        let userCoins = 0;
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentCoins = parseInt(localStorage.getItem('userCoins') || '0');
+            coinBalanceEl.textContent = currentCoins;
 
-        auth.onAuthStateChanged(async user => {
-            if (user) {
-                currentUser = user;
-                const userDoc = await db.collection('users').doc(user.uid).get();
-                loadingView.classList.add('hidden');
-                if (userDoc.exists) {
-                    userCoins = userDoc.data().coins;
-                    coinBalanceEl.textContent = userCoins;
-                    if (userCoins >= 5) {
-                        uploadView.classList.remove('hidden');
-                    } else {
-                        insufficientFundsView.classList.remove('hidden');
-                    }
-                }
+            if (currentCoins >= 5) {
+                uploadView.classList.remove('hidden');
             } else {
-                window.location.href = 'index.html';
+                insufficientFundsView.classList.remove('hidden');
             }
         });
 
-        promotionForm.addEventListener('submit', async (e) => {
+        promotionForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            let currentCoins = parseInt(localStorage.getItem('userCoins') || '0');
+            if (currentCoins < 5) {
+                alert('Error: Insufficient coins.'); return;
+            }
+
             const videoUrl = videoUrlInput.value.trim();
             if (!getYouTubeVideoId(videoUrl)) {
-                alert('Please enter a valid YouTube video URL.');
-                return;
+                alert('Please enter a valid YouTube video URL.'); return;
             }
+            
+            // Deduct coins and save back to localStorage
+            currentCoins -= 5;
+            localStorage.setItem('userCoins', currentCoins);
 
-            try {
-                const userDocRef = db.collection('users').doc(currentUser.uid);
+            // Add video object to promotion list in localStorage
+            const currentUserId = localStorage.getItem('currentUserId');
+            const promotedVideos = JSON.parse(localStorage.getItem('promotedVideos')) || [];
+            const newVideoData = { uploaderId: currentUserId, url: videoUrl };
 
-                // Use a transaction to ensure atomicity
-                await db.runTransaction(async (transaction) => {
-                    const userDoc = await transaction.get(userDocRef);
-                    if (!userDoc.exists) { throw "User document not found!"; }
-
-                    const newCoins = userDoc.data().coins - 5;
-                    if (newCoins < 0) { throw "Insufficient funds!"; }
-                    
-                    transaction.update(userDocRef, { coins: newCoins });
-                });
-                
-                // If transaction is successful, add video
-                await db.collection('videos').add({
-                    uploaderId: currentUser.uid,
-                    url: videoUrl,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
+            if (!promotedVideos.some(video => video.url === newVideoData.url)) {
+                promotedVideos.push(newVideoData);
+                localStorage.setItem('promotedVideos', JSON.stringify(promotedVideos));
                 alert('Video submitted successfully! 5 coins have been deducted.');
-                window.location.href = 'dashboard.html';
-
-            } catch (error) {
-                console.error("Error submitting video: ", error);
-                alert(`Failed to submit video. Error: ${error}`);
+            } else {
+                alert('This video has already been submitted.');
             }
+            
+            window.location.href = 'dashboard.html';
         });
 
         videoUrlInput.addEventListener('input', () => {
