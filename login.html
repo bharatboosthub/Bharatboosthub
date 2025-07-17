@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>Login - Bharat Boost Hub</title>
+    <title>Login / Sign Up - Bharat Boost Hub</title>
     <meta name="robots" content="noindex, nofollow">
 
     <!-- Tailwind CSS -->
@@ -53,7 +53,7 @@
         <div id="login-view" class="view active w-full max-w-md">
             <div class="text-center mb-8">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white">Welcome Back!</h2>
-                <p class="text-gray-400">Sign in to continue to your dashboard.</p>
+                <p class="text-gray-400">Sign in to continue.</p>
             </div>
             <div class="glass-card p-8 rounded-xl shadow-2xl">
                 <form id="login-form">
@@ -76,22 +76,12 @@
                 <form id="signup-form">
                     <div class="mb-4"><label for="signup-email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label><input type="email" id="signup-email" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white"></div>
                     <div class="mb-6"><label for="signup-password" class="block text-sm font-medium text-gray-300 mb-2">Password</label><input type="password" id="signup-password" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white"></div>
-                    <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">Send Verification Link</button>
+                    <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">Create Account</button>
                 </form>
                 <p id="signup-feedback" class="text-center text-sm mt-4 h-5"></p>
                 <p class="text-center text-sm text-gray-400 mt-6">Already have an account? <a href="#" id="show-login" class="font-medium text-red-500 hover:text-red-400">Sign In</a></p>
             </div>
         </div>
-
-        <!-- Verification Pending View -->
-        <div id="verification-view" class="view w-full max-w-md text-center">
-             <div class="glass-card p-8 rounded-xl shadow-2xl">
-                <h2 class="text-2xl font-bold text-white mb-4">Check Your Email</h2>
-                <p class="text-gray-300">We've sent a verification link to <strong id="verification-email" class="text-white"></strong>.</p>
-                <p class="text-gray-400 mt-2 text-sm">Click the link to complete your sign-up. You can close this tab.</p>
-             </div>
-        </div>
-
     </div>
 
     <script type="module">
@@ -107,7 +97,7 @@
 
         // Import Firebase services
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, updatePassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -115,21 +105,27 @@
         // --- View Switching Logic ---
         const loginView = document.getElementById('login-view');
         const signupView = document.getElementById('signup-view');
-        const verificationView = document.getElementById('verification-view');
         const showSignupBtn = document.getElementById('show-signup');
         const showLoginBtn = document.getElementById('show-login');
 
         function showView(view) {
-            loginView.classList.remove('active');
-            signupView.classList.remove('active');
-            verificationView.classList.remove('active');
-            view.classList.add('active');
+            loginView.classList.toggle('active', view === loginView);
+            signupView.classList.toggle('active', view === signupView);
         }
 
         showSignupBtn.addEventListener('click', (e) => { e.preventDefault(); showView(signupView); });
         showLoginBtn.addEventListener('click', (e) => { e.preventDefault(); showView(loginView); });
 
-        // --- Sign-Up Logic ---
+        // --- Redirect if already logged in ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // If a user is detected, redirect them to the dashboard.
+                // This prevents logged-in users from seeing the login page again.
+                window.location.href = './dashboard.html';
+            }
+        });
+
+        // --- Sign-Up Logic (Direct Creation) ---
         const signupForm = document.getElementById('signup-form');
         const signupFeedback = document.getElementById('signup-feedback');
         
@@ -141,65 +137,23 @@
             signupFeedback.textContent = '';
             signupFeedback.classList.remove('text-red-500', 'text-green-500');
 
-            // Action code settings for the verification link
-            const actionCodeSettings = {
-                url: window.location.href, // Redirect back to this same page
-                handleCodeInApp: true,
-            };
-
-            sendSignInLinkToEmail(auth, email, actionCodeSettings)
-                .then(() => {
-                    // Store email and password temporarily
-                    window.localStorage.setItem('emailForSignIn', email);
-                    window.localStorage.setItem('passwordForSignUp', password);
-                    
-                    // Show verification message
-                    document.getElementById('verification-email').textContent = email;
-                    showView(verificationView);
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // This will trigger the onAuthStateChanged listener, which handles the redirect.
+                    signupFeedback.textContent = 'Account created successfully! Redirecting...';
+                    signupFeedback.classList.add('text-green-500');
                 })
                 .catch((error) => {
-                    console.error("Error sending email link:", error);
-                    signupFeedback.textContent = 'Could not send verification email. Try again.';
+                    let msg = 'An error occurred. Please try again.';
+                    if (error.code === 'auth/email-already-in-use') {
+                        msg = 'This email is already in use.';
+                    } else if (error.code === 'auth/weak-password') {
+                        msg = 'Password must be at least 6 characters.';
+                    }
+                    signupFeedback.textContent = msg;
                     signupFeedback.classList.add('text-red-500');
                 });
         });
-
-        // --- Handle Verification Link Click ---
-        if (isSignInWithEmailLink(auth, window.location.href)) {
-            let email = window.localStorage.getItem('emailForSignIn');
-            if (!email) {
-                // This can happen if the user opens the link on a different device.
-                // Prompt the user for their email.
-                email = window.prompt('Please provide your email for confirmation');
-            }
-            
-            signInWithEmailLink(auth, email, window.location.href)
-                .then((result) => {
-                    // User is signed in. Now, set their password.
-                    const password = window.localStorage.getItem('passwordForSignUp');
-                    if (password) {
-                        updatePassword(result.user, password).then(() => {
-                            // Clear stored items
-                            window.localStorage.removeItem('emailForSignIn');
-                            window.localStorage.removeItem('passwordForSignUp');
-                            // Redirect to dashboard
-                            window.location.href = './dashboard.html';
-                        }).catch((error) => {
-                            console.error("Error setting password:", error);
-                            alert("Could not set your password. Please contact support.");
-                        });
-                    } else {
-                         // This case is unlikely but handled for safety
-                        alert("Your account is created but no password was set. Please use 'Forgot Password' to set one.");
-                        window.location.href = './dashboard.html';
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error signing in with email link:", error);
-                    alert("Invalid verification link. Please try signing up again.");
-                    showView(signupView);
-                });
-        }
 
         // --- Login Logic ---
         const loginForm = document.getElementById('login-form');
@@ -215,11 +169,9 @@
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
+                    // This will trigger the onAuthStateChanged listener, which handles the redirect.
                     loginFeedback.textContent = 'Login successful! Redirecting...';
                     loginFeedback.classList.add('text-green-500');
-                    setTimeout(() => {
-                        window.location.href = './dashboard.html';
-                    }, 1500);
                 })
                 .catch((error) => {
                     loginFeedback.textContent = 'Invalid email or password.';
