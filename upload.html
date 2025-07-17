@@ -3,53 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>Upload Video - Bharat Boost Hub</title>
-    <meta name="description" content="Upload your YouTube video to start promoting it on Bharat Boost Hub.">
-    <meta name="author" content="Bharat Boost Hub">
-
-    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-        .logo-circle {
-            background-color: #ef4444; color: white; width: 32px; height: 32px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 0.875rem; margin-right: 8px;
-        }
-        /* Spinner for loading state */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #ef4444;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .stat-card { background: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .logo-circle { background-color: #ef4444; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.875rem; margin-right: 8px; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #ef4444; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="antialiased text-gray-800">
 
-    <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-40">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
             <a href="dashboard.html" class="flex items-center">
@@ -58,46 +24,35 @@
             </a>
             <div class="flex items-center space-x-4 sm:space-x-6">
                 <div class="flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-3-7a1 1 0 011-1h4a1 1 0 110 2h-1v1a1 1 0 11-2 0V9H7a1 1 0 01-1-1z" />
-                    </svg>
+                    <svg class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-3-7a1 1 0 011-1h4a1 1 0 110 2h-1v1a1 1 0 11-2 0V9H7a1 1 0 01-1-1z" /></svg>
                     <span id="coin-count" class="font-semibold text-gray-700">...</span>
                 </div>
-                <a href="login.html" class="text-sm font-medium text-gray-600 hover:text-red-600 transition-colors">Logout</a>
+                <button id="logout-btn" class="text-sm font-medium text-gray-600 hover:text-red-600">Logout</button>
             </div>
         </nav>
     </header>
 
-    <!-- Main Upload Content -->
     <main class="container mx-auto p-4 sm:p-6 lg:p-8">
         <a href="dashboard.html" class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-red-600 transition-colors mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-            </svg>
+            <svg class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
             Back to Dashboard
         </a>
-
         <div class="stat-card max-w-2xl mx-auto">
             <h1 class="text-2xl font-bold text-center mb-2">Promote Your Video</h1>
             <p class="text-gray-600 text-center mb-8">Enter the URL of the YouTube video you want to promote.</p>
-
             <form id="upload-form" class="space-y-6">
                 <div>
                     <label for="video-url" class="block text-sm font-medium text-gray-700">YouTube Video URL</label>
                     <div class="mt-1">
-                        <input id="video-url" name="video-url" type="url" required
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 shadow-sm placeholder-gray-400"
-                               placeholder="https://www.youtube.com/watch?v=...">
+                        <input id="video-url" name="video-url" type="url" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 shadow-sm placeholder-gray-400" placeholder="https://www.youtube.com/watch?v=...">
                     </div>
                 </div>
-                
                 <div id="video-preview-container" class="hidden aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
                      <p class="text-gray-500">Video preview will appear here</p>
                 </div>
-
+                <p id="error-message" class="text-red-500 text-sm text-center h-5"></p>
                 <div>
-                    <button id="submit-btn" type="submit"
-                            class="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-red-500 transition-all duration-300">
+                    <button id="submit-btn" type="submit" class="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-red-500 transition-all duration-300">
                         <span id="submit-btn-text">Submit Video for Promotion</span>
                         <div id="submit-spinner" class="loader hidden"></div>
                     </button>
@@ -107,71 +62,50 @@
     </main>
     
     <script type="module">
-        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, addDoc, collection, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- Firebase Configuration ---
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-        let userId = null;
-        let dbUserRef = null;
+        let currentUserId = null;
 
-        // --- Authentication ---
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                userId = user.uid;
-                dbUserRef = doc(db, `artifacts/${appId}/users/${userId}`);
-                // Fetch and display user's coin count
-                const userDoc = await getDoc(dbUserRef);
-                if (userDoc.exists()) {
-                    document.getElementById('coin-count').textContent = userDoc.data().coins || 0;
-                } else {
-                    // Create user profile if it doesn't exist
-                    await setDoc(dbUserRef, { coins: 5, createdAt: serverTimestamp() });
-                    document.getElementById('coin-count').textContent = 5;
-                }
-            } else {
-                // Handle user not signed in
-                window.location.href = 'login.html';
-            }
-        });
-        
-        // Sign in logic
-        (async () => {
-            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                try {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } catch (error) {
-                    console.error("Error signing in with custom token:", error);
-                    await signInAnonymously(auth);
-                }
-            } else {
-                await signInAnonymously(auth);
-            }
-        })();
-
-
-        // --- UI Logic ---
+        const coinCountEl = document.getElementById('coin-count');
+        const logoutBtn = document.getElementById('logout-btn');
         const videoUrlInput = document.getElementById('video-url');
         const previewContainer = document.getElementById('video-preview-container');
         const uploadForm = document.getElementById('upload-form');
         const submitBtn = document.getElementById('submit-btn');
         const submitBtnText = document.getElementById('submit-btn-text');
         const submitSpinner = document.getElementById('submit-spinner');
+        const errorMessage = document.getElementById('error-message');
 
-        // Function to extract YouTube video ID from URL
+        logoutBtn.addEventListener('click', () => signOut(auth));
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                // FIX: Set up a listener for the coin count
+                const userRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
+                onSnapshot(userRef, (doc) => {
+                    if (doc.exists()) {
+                        coinCountEl.textContent = doc.data().coins ?? 0;
+                    }
+                });
+            } else {
+                window.location.replace('login.html');
+            }
+        });
+
         function getYouTubeId(url) {
             const match = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
             return match ? match[1] : null;
         }
 
-        // Show video preview on input
         videoUrlInput.addEventListener('input', () => {
             const videoId = getYouTubeId(videoUrlInput.value);
             if (videoId) {
@@ -183,11 +117,10 @@
             }
         });
 
-        // --- Form Submission Logic ---
         uploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!userId) {
-                alert("You must be logged in to upload a video.");
+            if (!currentUserId) {
+                errorMessage.textContent = "Authentication error. Please refresh.";
                 return;
             }
 
@@ -195,35 +128,28 @@
             const videoId = getYouTubeId(videoUrl);
 
             if (!videoId) {
-                alert("Please enter a valid YouTube video URL.");
+                errorMessage.textContent = "Please enter a valid YouTube video URL.";
                 return;
             }
 
-            // Show loading state
             submitBtn.disabled = true;
             submitBtnText.classList.add('hidden');
             submitSpinner.classList.remove('hidden');
+            errorMessage.textContent = '';
 
             try {
-                // Add video to the public 'videos' collection
                 const videosCollectionRef = collection(db, `artifacts/${appId}/public/data/videos`);
                 await addDoc(videosCollectionRef, {
-                    uploaderId: userId,
+                    uploaderId: currentUserId,
                     videoId: videoId,
                     url: videoUrl,
                     createdAt: serverTimestamp(),
-                    likes: 0,
-                    subscribers: 0
                 });
-
-                alert('Video submitted successfully!');
                 window.location.href = 'dashboard.html';
-
             } catch (error) {
                 console.error("Error adding document: ", error);
-                alert("There was an error submitting your video. Please try again.");
+                errorMessage.textContent = "Error submitting video. Please try again.";
             } finally {
-                // Hide loading state
                 submitBtn.disabled = false;
                 submitBtnText.classList.remove('hidden');
                 submitSpinner.classList.add('hidden');
