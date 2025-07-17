@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Upload Video - Bharat Boost Hub</title>
+    <meta name="description" content="Upload your YouTube video to start promoting it on Bharat Boost Hub.">
+    <meta name="author" content="Bharat Boost Hub">
+
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Reusing styles from dashboard for consistency */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .logo-circle {
+            background-color: #ef4444; color: white; width: 32px; height: 32px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 0.875rem; margin-right: 8px;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-40">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <a href="dashboard.html" class="flex items-center">
+                <div class="logo-circle">BB</div>
+                <span class="font-bold text-lg text-gray-800">Bharat Boost Hub</span>
+            </a>
+            <div class="flex items-center space-x-4 sm:space-x-6">
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-3-7a1 1 0 011-1h4a1 1 0 110 2h-1v1a1 1 0 11-2 0V9H7a1 1 0 01-1-1z" />
+                    </svg>
+                    <span class="font-semibold text-gray-700">5</span>
+                </div>
+                <a href="login.html" class="text-sm font-medium text-gray-600 hover:text-red-600 transition-colors">Logout</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Upload Content -->
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <a href="dashboard.html" class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-red-600 transition-colors mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+            Back to Dashboard
+        </a>
+
+        <div class="stat-card max-w-2xl mx-auto">
+            <h1 class="text-2xl font-bold text-center mb-2">Promote Your Video</h1>
+            <p class="text-gray-600 text-center mb-8">Enter the URL of the YouTube video you want to promote.</p>
+
+            <form id="upload-form" class="space-y-6">
+                <div>
+                    <label for="video-url" class="block text-sm font-medium text-gray-700">YouTube Video URL</label>
+                    <div class="mt-1">
+                        <input id="video-url" name="video-url" type="url" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 shadow-sm placeholder-gray-400"
+                               placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+                </div>
+                
+                <!-- Placeholder for video preview -->
+                <div id="video-preview-container" class="hidden aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
+                     <p class="text-gray-500">Video preview will appear here</p>
+                </div>
+
+                <div>
+                    <button type="submit"
+                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-red-500 transition-all duration-300">
+                        Submit Video for Promotion
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <script>
+        // Script to show a video preview from the URL
+        const videoUrlInput = document.getElementById('video-url');
+        const previewContainer = document.getElementById('video-preview-container');
+
+        videoUrlInput.addEventListener('input', () => {
+            const url = videoUrlInput.value;
+            // A simple regex to extract YouTube video ID
+            const videoIdMatch = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            
+            if (videoIdMatch && videoIdMatch[1]) {
+                const videoId = videoIdMatch[1];
+                previewContainer.innerHTML = `<iframe class="w-full h-full rounded-lg" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                previewContainer.classList.remove('hidden');
+            } else {
+                previewContainer.classList.add('hidden');
+                previewContainer.innerHTML = '<p class="text-gray-500">Video preview will appear here</p>';
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('upload-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Video submitted for promotion! (This is a demo)');
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>
