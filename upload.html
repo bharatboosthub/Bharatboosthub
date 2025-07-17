@@ -3,238 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promote Your Video - Bharat Boost Hub</title>
-    <!-- Google Icons for potential future use -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <style>
-        /* --- General Styles --- */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
-            color: #1c1e21;
-        }
-
-        .page-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* --- Header --- */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #ffffff;
-            padding: 10px 20px;
-            border-bottom: 1px solid #dddfe2;
-        }
-
-        .header-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-logo .icon-placeholder {
-            width: 32px;
-            height: 32px;
-            background-color: #FF0000;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-weight: bold;
-            font-size: 1em;
-        }
-
-        .header-logo .logo-text {
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .header-actions a {
-            text-decoration: none;
-            color: #606770;
-            font-weight: 500;
-            font-size: 0.9em;
-        }
-        
-        /* --- Back to Dashboard Link --- */
-        .back-link {
-            display: block;
-            margin: 20px 0;
-            text-decoration: none;
-            color: #606770;
-            font-weight: 500;
-        }
-
-        /* --- Main Content Card --- */
-        .promotion-card {
-            background-color: #ffffff;
-            border: 1px solid #dddfe2;
-            border-radius: 8px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .promotion-card h1 {
-            margin-top: 0;
-            margin-bottom: 8px;
-            font-size: 1.8em;
-            text-align: center;
-        }
-
-        .promotion-card .subtitle {
-            margin-bottom: 24px;
-            color: #606770;
-            text-align: center;
-        }
-        
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #606770;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ced0d4;
-            border-radius: 6px;
-            font-size: 1em;
-            box-sizing: border-box; /* Ensures padding doesn't affect width */
-        }
-        
-        /* --- Video Preview --- */
-        #video-preview-container {
-            margin-top: 20px;
-            aspect-ratio: 16 / 9; /* For responsive video player */
-            display: none; /* Hidden by default */
-        }
-
-        #video-preview-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 8px;
-        }
-
-        /* --- Submit Button --- */
-        .submit-button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 6px;
-            background-color: #FF0000;
-            color: white;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 16px;
-            display: none; /* Hidden by default */
-        }
-
-        .submit-button:hover {
-            background-color: #d60000;
-        }
-    </style>
+    <title>Promote Video - Bharat Boost Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style> body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; } </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-logo">
-            <div class="icon-placeholder">BB</div>
-            <span class="logo-text">Bharat Boost Hub</span>
-        </div>
-        <div class="header-actions">
-            <a href="#">...</a>
-            <a href="#">Logout</a>
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">BB</div>
+                <h1 class="text-lg font-bold text-gray-800">Bharat Boost Hub</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-400">...</span>
+                <a href="#" class="text-gray-700 hover:text-red-600 text-sm font-medium">Logout</a>
+            </div>
         </div>
     </header>
 
-    <div class="page-container">
-        <a href="#" class="back-link">< Back to Dashboard</a>
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <a href="dashboard.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span class="ml-1">Back to Dashboard</span>
+        </a>
 
-        <div class="promotion-card">
-            <h1>Promote Your Video</h1>
-            <p class="subtitle">Enter the URL of the YouTube video you want to promote.</p>
-            
-            <div class="form-group">
-                <label for="video-url">YouTube Video URL</label>
-                <input type="text" id="video-url" placeholder="https://www.youtube.com/watch?v=...">
+        <div class="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold text-gray-800">Promote Your Video</h2>
+                <p class="text-gray-500 mt-2">Enter the URL of the YouTube video you want to promote.</p>
             </div>
             
-            <!-- Container for the video preview -->
-            <div id="video-preview-container"></div>
+            <form id="promotion-form" class="mt-8 space-y-6">
+                <div>
+                    <label for="video-url" class="block text-sm font-medium text-gray-700 mb-1">YouTube Video URL</label>
+                    <input type="text" id="video-url" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="https://www.youtube.com/watch?v=..." required>
+                </div>
+                
+                <div id="video-preview" class="hidden aspect-video bg-gray-200 rounded-lg overflow-hidden">
+                    <!-- Iframe preview will be inserted here -->
+                </div>
 
-            <!-- Submit button appears after video is loaded -->
-            <button id="submit-button" class="submit-button">Submit Video for Promotion</button>
+                <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-all">
+                    Submit Video for Promotion
+                </button>
+            </form>
         </div>
-    </div>
+    </main>
 
     <script>
+        const promotionForm = document.getElementById('promotion-form');
         const videoUrlInput = document.getElementById('video-url');
-        const videoPreviewContainer = document.getElementById('video-preview-container');
-        const submitButton = document.getElementById('submit-button');
+        const videoPreview = document.getElementById('video-preview');
 
-        // Listen for the 'paste' event on the input field
-        videoUrlInput.addEventListener('paste', handlePaste);
-        // Also listen for 'input' to handle manual typing or other changes
-        videoUrlInput.addEventListener('input', handlePaste);
+        videoUrlInput.addEventListener('input', () => {
+            const url = videoUrlInput.value;
+            const videoId = getYouTubeVideoId(url);
+            if (videoId) {
+                videoPreview.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                videoPreview.classList.remove('hidden');
+            } else {
+                videoPreview.classList.add('hidden');
+            }
+        });
 
+        promotionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const videoUrl = videoUrlInput.value.trim();
+            const videoId = getYouTubeVideoId(videoUrl);
 
-        function handlePaste(event) {
-            // Use a small timeout to allow the input value to update before we read it
-            setTimeout(() => {
-                const url = videoUrlInput.value;
-                const videoId = getYouTubeVideoId(url);
-
-                if (videoId) {
-                    // If a valid ID is found, create the embeddable URL
-                    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                    
-                    // Create the iframe for the video preview
-                    videoPreviewContainer.innerHTML = `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                    
-                    // Make the preview and submit button visible
-                    videoPreviewContainer.style.display = 'block';
-                    submitButton.style.display = 'block';
-                } else {
-                    // If the URL is invalid or cleared, hide the preview and button
-                    videoPreviewContainer.style.display = 'none';
-                    videoPreviewContainer.innerHTML = ''; // Clear content
-                    submitButton.style.display = 'none';
-                }
-            }, 100);
-        }
+            if (!videoId) {
+                alert('Please enter a valid YouTube video URL.'); return;
+            }
+            const promotedVideos = JSON.parse(localStorage.getItem('promotedVideos')) || [];
+            if (!promotedVideos.includes(videoUrl)) {
+                promotedVideos.push(videoUrl);
+                localStorage.setItem('promotedVideos', JSON.stringify(promotedVideos));
+                alert('Video submitted successfully!');
+            } else {
+                alert('This video has already been submitted.');
+            }
+            window.location.href = 'dashboard.html';
+        });
 
         function getYouTubeVideoId(url) {
-            // Regular expression to find the YouTube video ID from various URL formats
             const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             const match = url.match(regExp);
-
-            // The video ID is in the 7th captured group, and should be 11 characters long
-            if (match && match[2].length === 11) {
-                return match[2];
-            } else {
-                return null;
-            }
+            return (match && match[2].length === 11) ? match[2] : null;
         }
     </script>
 </body>
