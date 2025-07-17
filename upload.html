@@ -3,158 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Video - Bharat Boost Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Promote Your Video - Bharat Boost Hub</title>
+    <!-- Google Icons for potential future use -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
-        .stat-card { background: white; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
-        .logo-circle { background-color: #ef4444; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.875rem; margin-right: 8px; }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #ef4444; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
-</head>
-<body class="antialiased text-gray-800">
-
-    <header class="bg-white shadow-sm sticky top-0 z-40">
-        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-            <a href="dashboard.html" class="flex items-center">
-                <div class="logo-circle">BB</div>
-                <span class="font-bold text-lg text-gray-800">Bharat Boost Hub</span>
-            </a>
-            <div class="flex items-center space-x-4 sm:space-x-6">
-                <div class="flex items-center space-x-2">
-                    <svg class="h-5 w-5 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm-3-7a1 1 0 011-1h4a1 1 0 110 2h-1v1a1 1 0 11-2 0V9H7a1 1 0 01-1-1z" /></svg>
-                    <span id="coin-count" class="font-semibold text-gray-700">...</span>
-                </div>
-                <button id="logout-btn" class="text-sm font-medium text-gray-600 hover:text-red-600">Logout</button>
-            </div>
-        </nav>
-    </header>
-
-    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
-        <a href="dashboard.html" class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-red-600 transition-colors mb-6">
-            <svg class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-            Back to Dashboard
-        </a>
-        <div class="stat-card max-w-2xl mx-auto">
-            <h1 class="text-2xl font-bold text-center mb-2">Promote Your Video</h1>
-            <p class="text-gray-600 text-center mb-8">Enter the URL of the YouTube video you want to promote.</p>
-            <form id="upload-form" class="space-y-6">
-                <div>
-                    <label for="video-url" class="block text-sm font-medium text-gray-700">YouTube Video URL</label>
-                    <div class="mt-1">
-                        <input id="video-url" name="video-url" type="url" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 shadow-sm placeholder-gray-400" placeholder="https://www.youtube.com/watch?v=...">
-                    </div>
-                </div>
-                <div id="video-preview-container" class="hidden aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
-                     <p class="text-gray-500">Video preview will appear here</p>
-                </div>
-                <p id="error-message" class="text-red-500 text-sm text-center h-5"></p>
-                <div>
-                    <button id="submit-btn" type="submit" class="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-red-500 transition-all duration-300">
-                        <span id="submit-btn-text">Submit Video for Promotion</span>
-                        <div id="submit-spinner" class="loader hidden"></div>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </main>
-    
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, addDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-        let currentUserId = null;
-
-        const coinCountEl = document.getElementById('coin-count');
-        const logoutBtn = document.getElementById('logout-btn');
-        const videoUrlInput = document.getElementById('video-url');
-        const previewContainer = document.getElementById('video-preview-container');
-        const uploadForm = document.getElementById('upload-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const submitBtnText = document.getElementById('submit-btn-text');
-        const submitSpinner = document.getElementById('submit-spinner');
-        const errorMessage = document.getElementById('error-message');
-
-        logoutBtn.addEventListener('click', () => signOut(auth));
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUserId = user.uid;
-                // FIX: Set up a listener for the coin count
-                const userRef = doc(db, `artifacts/${appId}/users/${currentUserId}`);
-                onSnapshot(userRef, (doc) => {
-                    if (doc.exists()) {
-                        coinCountEl.textContent = doc.data().coins ?? 0;
-                    }
-                });
-            } else {
-                window.location.replace('login.html');
-            }
-        });
-
-        function getYouTubeId(url) {
-            const match = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-            return match ? match[1] : null;
+        /* --- General Styles --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            color: #1c1e21;
         }
 
-        videoUrlInput.addEventListener('input', () => {
-            const videoId = getYouTubeId(videoUrlInput.value);
-            if (videoId) {
-                previewContainer.innerHTML = `<iframe class="w-full h-full rounded-lg" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                previewContainer.classList.remove('hidden');
+        .page-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #dddfe2;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo .icon-placeholder {
+            width: 32px;
+            height: 32px;
+            background-color: #FF0000;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        .header-logo .logo-text {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-actions a {
+            text-decoration: none;
+            color: #606770;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+        
+        /* --- Back to Dashboard Link --- */
+        .back-link {
+            display: block;
+            margin: 20px 0;
+            text-decoration: none;
+            color: #606770;
+            font-weight: 500;
+        }
+
+        /* --- Main Content Card --- */
+        .promotion-card {
+            background-color: #ffffff;
+            border: 1px solid #dddfe2;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .promotion-card h1 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .promotion-card .subtitle {
+            margin-bottom: 24px;
+            color: #606770;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #606770;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced0d4;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        
+        /* --- Video Preview --- */
+        #video-preview-container {
+            margin-top: 20px;
+            aspect-ratio: 16 / 9; /* For responsive video player */
+            display: none; /* Hidden by default */
+        }
+
+        #video-preview-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* --- Submit Button --- */
+        .submit-button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            background-color: #FF0000;
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 16px;
+            display: none; /* Hidden by default */
+        }
+
+        .submit-button:hover {
+            background-color: #d60000;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-logo">
+            <div class="icon-placeholder">BB</div>
+            <span class="logo-text">Bharat Boost Hub</span>
+        </div>
+        <div class="header-actions">
+            <a href="#">...</a>
+            <a href="#">Logout</a>
+        </div>
+    </header>
+
+    <div class="page-container">
+        <a href="#" class="back-link">< Back to Dashboard</a>
+
+        <div class="promotion-card">
+            <h1>Promote Your Video</h1>
+            <p class="subtitle">Enter the URL of the YouTube video you want to promote.</p>
+            
+            <div class="form-group">
+                <label for="video-url">YouTube Video URL</label>
+                <input type="text" id="video-url" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+            
+            <!-- Container for the video preview -->
+            <div id="video-preview-container"></div>
+
+            <!-- Submit button appears after video is loaded -->
+            <button id="submit-button" class="submit-button">Submit Video for Promotion</button>
+        </div>
+    </div>
+
+    <script>
+        const videoUrlInput = document.getElementById('video-url');
+        const videoPreviewContainer = document.getElementById('video-preview-container');
+        const submitButton = document.getElementById('submit-button');
+
+        // Listen for the 'paste' event on the input field
+        videoUrlInput.addEventListener('paste', handlePaste);
+        // Also listen for 'input' to handle manual typing or other changes
+        videoUrlInput.addEventListener('input', handlePaste);
+
+
+        function handlePaste(event) {
+            // Use a small timeout to allow the input value to update before we read it
+            setTimeout(() => {
+                const url = videoUrlInput.value;
+                const videoId = getYouTubeVideoId(url);
+
+                if (videoId) {
+                    // If a valid ID is found, create the embeddable URL
+                    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                    
+                    // Create the iframe for the video preview
+                    videoPreviewContainer.innerHTML = `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                    
+                    // Make the preview and submit button visible
+                    videoPreviewContainer.style.display = 'block';
+                    submitButton.style.display = 'block';
+                } else {
+                    // If the URL is invalid or cleared, hide the preview and button
+                    videoPreviewContainer.style.display = 'none';
+                    videoPreviewContainer.innerHTML = ''; // Clear content
+                    submitButton.style.display = 'none';
+                }
+            }, 100);
+        }
+
+        function getYouTubeVideoId(url) {
+            // Regular expression to find the YouTube video ID from various URL formats
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+
+            // The video ID is in the 7th captured group, and should be 11 characters long
+            if (match && match[2].length === 11) {
+                return match[2];
             } else {
-                previewContainer.classList.add('hidden');
-                previewContainer.innerHTML = '<p class="text-gray-500">Video preview will appear here</p>';
+                return null;
             }
-        });
-
-        uploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUserId) {
-                errorMessage.textContent = "Authentication error. Please refresh.";
-                return;
-            }
-
-            const videoUrl = videoUrlInput.value;
-            const videoId = getYouTubeId(videoUrl);
-
-            if (!videoId) {
-                errorMessage.textContent = "Please enter a valid YouTube video URL.";
-                return;
-            }
-
-            submitBtn.disabled = true;
-            submitBtnText.classList.add('hidden');
-            submitSpinner.classList.remove('hidden');
-            errorMessage.textContent = '';
-
-            try {
-                const videosCollectionRef = collection(db, `artifacts/${appId}/public/data/videos`);
-                await addDoc(videosCollectionRef, {
-                    uploaderId: currentUserId,
-                    videoId: videoId,
-                    url: videoUrl,
-                    createdAt: serverTimestamp(),
-                });
-                window.location.href = 'dashboard.html';
-            } catch (error) {
-                console.error("Error adding document: ", error);
-                errorMessage.textContent = "Error submitting video. Please try again.";
-            } finally {
-                submitBtn.disabled = false;
-                submitBtnText.classList.remove('hidden');
-                submitSpinner.classList.add('hidden');
-            }
-        });
+        }
     </script>
 </body>
 </html>
