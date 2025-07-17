@@ -92,15 +92,20 @@
             projectId: "bharat-boost-hub",
             storageBucket: "bharat-boost-hub.appspot.com",
             messagingSenderId: "1047323522415",
-            appId: "1:1047323522415:web:4972c0bce15ae7253de49a" // Example App ID
+            appId: "1:1047323522415:web:4972c0bce15ae7253de49a"
         };
 
         // Import Firebase services
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // **FIX**: Added Firestore imports to create user profiles
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        // **FIX**: Initialized Firestore
+        const db = getFirestore(app);
+        const appId = firebaseConfig.appId;
 
         // --- View Switching Logic ---
         const loginView = document.getElementById('login-view');
@@ -116,14 +121,8 @@
         showSignupBtn.addEventListener('click', (e) => { e.preventDefault(); showView(signupView); });
         showLoginBtn.addEventListener('click', (e) => { e.preventDefault(); showView(loginView); });
 
-        // --- Redirect if already logged in ---
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // If a user is detected, redirect them to the home page.
-                // This prevents logged-in users from seeing the login page again.
-                window.location.href = 'dashboard.html';
-            }
-        });
+        // **FIX**: The onAuthStateChanged listener that caused auto-login has been removed.
+        // The page will now always show the login form on load.
 
         // --- Sign-Up Logic (Direct Creation) ---
         const signupForm = document.getElementById('signup-form');
@@ -139,12 +138,21 @@
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // On success, show message and redirect to the new page.
+                    // **FIX**: Added logic to create a user document in Firestore
+                    const user = userCredential.user;
+                    const userRef = doc(db, `artifacts/${appId}/users/${user.uid}`);
+                    return setDoc(userRef, {
+                        email: user.email,
+                        coins: 5, // Give new users a starting bonus
+                        createdAt: serverTimestamp()
+                    });
+                })
+                .then(() => {
+                    // On success, show message and redirect to the dashboard page.
                     signupFeedback.textContent = 'Account created successfully! Redirecting...';
                     signupFeedback.classList.add('text-green-500');
-                    // **ADDED REDIRECT**
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = './dashboard.html'; // Redirect to dashboard
                     }, 1000); // Wait 1 second before redirecting
                 })
                 .catch((error) => {
@@ -173,12 +181,11 @@
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // On success, show message and redirect to the new page.
+                    // On success, show message and redirect to the dashboard page.
                     loginFeedback.textContent = 'Login successful! Redirecting...';
                     loginFeedback.classList.add('text-green-500');
-                    // **ADDED REDIRECT**
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = './dashboard.html'; // Redirect to dashboard
                     }, 1000); // Wait 1 second before redirecting
                 })
                 .catch((error) => {
