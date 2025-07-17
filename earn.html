@@ -16,107 +16,141 @@
     <!-- Header -->
     <header class="bg-white border-b border-gray-200">
         <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
+            <a href="dashboard.html" class="flex items-center space-x-3">
                 <div class="bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">BB</div>
                 <h1 class="text-lg font-bold text-gray-800">Bharat Boost Hub</h1>
-            </div>
-            <div class="flex items-center space-x-4">
-                <span class="text-gray-400">...</span>
-                <a href="#" class="text-gray-700 hover:text-red-600 text-sm font-medium">Logout</a>
-            </div>
+            </a>
+            <a href="dashboard.html" class="text-gray-600 hover:text-red-600 font-semibold transition">← Back to Dashboard</a>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="container mx-auto px-6 py-8">
-        <a href="dashboard.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6">
-            <span class="material-symbols-outlined">arrow_back</span>
-            <span class="ml-1">Back to Dashboard</span>
-        </a>
-
         <div id="earn-container" class="bg-white p-6 sm:p-8 rounded-lg shadow-md max-w-3xl mx-auto">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Watch Videos, Earn Coins</h2>
-                <p class="text-gray-500 mt-1">Engage with the video below to earn rewards.</p>
-            </div>
             
-            <div id="video-player-area" class="mb-6 aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center text-gray-400">
-                <!-- YouTube Iframe or loading message will be here -->
-                <span>Loading a video for you...</span>
+            <!-- VIEW 1: Start Task -->
+            <div id="start-view" class="hidden">
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Complete the Task to Earn</h2>
+                    <p class="text-gray-500 mt-1">Click below to open YouTube. Watch, like, and subscribe, then return after 3 minutes.</p>
+                </div>
+                <div id="video-thumbnail-area" class="my-6 aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center text-gray-400"></div>
+                <button id="start-task-btn" class="w-full bg-red-600 text-white font-bold py-3 text-lg rounded-lg hover:bg-red-700 transition-all flex items-center justify-center space-x-2">Start Task & Open YouTube</button>
             </div>
 
-            <div id="action-buttons" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <button id="like-btn" class="w-full bg-blue-500 text-white font-bold py-3 rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center space-x-2">
-                    <span class="material-symbols-outlined">thumb_up</span>
-                    <span>Like (+5 Coins)</span>
-                </button>
-                <button id="subscribe-btn" class="w-full bg-red-600 text-white font-bold py-3 rounded-lg hover:bg-red-700 transition-all flex items-center justify-center space-x-2">
-                    <span class="material-symbols-outlined">subscriptions</span>
-                    <span>Subscribe (+10)</span>
-                </button>
-                <button id="skip-btn" class="w-full bg-gray-600 text-white font-bold py-3 rounded-lg hover:bg-gray-700 transition-all flex items-center justify-center space-x-2">
-                    <span>Skip Video</span>
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </button>
+            <!-- VIEW 2: Waiting for user to return -->
+            <div id="waiting-view" class="hidden text-center">
+                <h2 class="text-2xl font-bold text-gray-800">Task in Progress...</h2>
+                <div class="my-8">
+                    <div class="text-5xl font-bold text-red-600" id="timer-display">03:00</div>
+                </div>
+            </div>
+
+            <!-- VIEW 3: Claim Reward -->
+            <div id="claim-view" class="hidden text-center">
+                <h2 class="text-2xl font-bold text-green-600 mt-2">Task Complete!</h2>
+                <button id="claim-btn" class="w-full max-w-sm mx-auto mt-8 bg-green-500 text-white font-bold py-3 text-lg rounded-lg hover:bg-green-600 transition-all">Claim Reward (+1 Coin)</button>
             </div>
         </div>
         
         <div id="no-videos-container" class="hidden text-center bg-white p-12 rounded-lg shadow-md max-w-3xl mx-auto">
-            <h3 class="text-2xl font-bold text-green-600">All Caught Up!</h3>
-            <p class="text-gray-600 mt-2">You have watched all available videos for now. Please check back later for more content to review!</p>
+            <h3 class="text-2xl font-bold text-gray-800">No Videos to Watch</h2>
+            <p class="text-gray-600 mt-2">There are currently no videos from other users to review. Check back later!</p>
         </div>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const videoPlayerArea = document.getElementById('video-player-area');
-            const likeBtn = document.getElementById('like-btn');
-            const subscribeBtn = document.getElementById('subscribe-btn');
-            const skipBtn = document.getElementById('skip-btn');
-            const earnContainer = document.getElementById('earn-container');
-            const noVideosContainer = document.getElementById('no-videos-container');
+            // --- UI & LOGIC VARIABLES ---
+            const [earnContainer, noVideosContainer, startView, waitingView, claimView, thumbnailArea, timerDisplay, startTaskBtn, claimBtn] = 
+                ['earn-container', 'no-videos-container', 'start-view', 'waiting-view', 'claim-view', 'video-thumbnail-area', 'timer-display', 'start-task-btn', 'claim-btn'].map(id => document.getElementById(id));
+            
+            const requiredWatchTime = 3 * 60 * 1000;
+            let timerInterval;
 
-            let allVideos = JSON.parse(localStorage.getItem('promotedVideos')) || [];
+            // --- USER & VIDEO MANAGEMENT ---
+            function getOrCreateUserId() {
+                let userId = localStorage.getItem('currentUserId');
+                if (!userId) {
+                    userId = 'user_' + Date.now() + Math.random().toString(36).substring(2, 9);
+                    localStorage.setItem('currentUserId', userId);
+                }
+                return userId;
+            }
+            
+            const currentUserId = getOrCreateUserId();
+            const allPromotedVideos = JSON.parse(localStorage.getItem('promotedVideos')) || [];
+            
+            // ** THE CORE NEW FEATURE: FILTER OUT THE USER'S OWN VIDEOS **
+            const videosToWatch = allPromotedVideos.filter(video => video.uploaderId !== currentUserId);
+            
             let currentVideoIndex = 0;
 
-            function loadVideo(index) {
-                // Check if videos are available and the index is valid
-                if (allVideos.length > 0 && index < allVideos.length) {
+            // --- CORE FUNCTIONS ---
+            function switchView(viewToShow) {
+                [startView, waitingView, claimView].forEach(v => v.classList.add('hidden'));
+                viewToShow.classList.remove('hidden');
+            }
+
+            function loadVideoForTask(index) {
+                if (videosToWatch.length > 0 && index < videosToWatch.length) {
                     earnContainer.classList.remove('hidden');
                     noVideosContainer.classList.add('hidden');
-
-                    const videoUrl = allVideos[index];
-                    const videoId = getYouTubeVideoId(videoUrl);
-                    if (videoId) {
-                        videoPlayerArea.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                    }
+                    const videoId = getYouTubeVideoId(videosToWatch[index].url);
+                    thumbnailArea.innerHTML = `<img src="https://i3.ytimg.com/vi/${videoId}/hqdefault.jpg" class="w-full h-full object-cover" alt="Video Thumbnail">`;
+                    switchView(startView);
                 } else {
-                    // No more videos to show
                     earnContainer.classList.add('hidden');
                     noVideosContainer.classList.remove('hidden');
                 }
             }
 
-            likeBtn.addEventListener('click', () => {
-                const currentVideoUrl = allVideos[currentVideoIndex];
-                if (currentVideoUrl) {
-                    alert('Opening YouTube in a new tab. Please LIKE the video there to earn your coins!');
-                    window.open(currentVideoUrl, '_blank');
-                }
-            });
+            function startTask() {
+                localStorage.setItem('taskStartTime', Date.now());
+                window.open(videosToWatch[currentVideoIndex].url, '_blank');
+                switchView(waitingView);
+                updateTimer();
+                timerInterval = setInterval(updateTimer, 1000);
+            }
 
-            subscribeBtn.addEventListener('click', () => {
-                const currentVideoUrl = allVideos[currentVideoIndex];
-                if (currentVideoUrl) {
-                    alert('Opening YouTube in a new tab. Please SUBSCRIBE to the channel for your reward!');
-                    window.open(currentVideoUrl, '_blank');
-                }
-            });
+            function updateTimer() {
+                const startTime = parseInt(localStorage.getItem('taskStartTime'), 10);
+                if (!startTime) { clearInterval(timerInterval); return; }
+                
+                const remainingTime = Math.max(0, requiredWatchTime - (Date.now() - startTime));
+                timerDisplay.textContent = new Date(remainingTime).toISOString().substr(14, 5);
 
-            skipBtn.addEventListener('click', () => {
+                if (remainingTime <= 0) {
+                    clearInterval(timerInterval);
+                    switchView(claimView);
+                }
+            }
+
+            function claimReward() {
+                let currentCoins = parseInt(localStorage.getItem('userCoins') || '0');
+                currentCoins += 1; // User earns 1 coin for completing a task
+                localStorage.setItem('userCoins', currentCoins);
+                localStorage.removeItem('taskStartTime');
+                
+                alert('Congratulations! 1 coin has been added to your account.');
+                
                 currentVideoIndex++;
-                loadVideo(currentVideoIndex);
-            });
+                loadVideoForTask(currentVideoIndex);
+            }
+
+            function checkTaskStateOnLoad() {
+                const startTime = localStorage.getItem('taskStartTime');
+                if (startTime) {
+                    switchView(waitingView);
+                    updateTimer();
+                    timerInterval = setInterval(updateTimer, 1000);
+                } else {
+                    loadVideoForTask(currentVideoIndex);
+                }
+            }
+            
+            startTaskBtn.addEventListener('click', startTask);
+            claimBtn.addEventListener('click', claimReward);
 
             function getYouTubeVideoId(url) {
                 const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -124,8 +158,7 @@
                 return (match && match[2].length === 11) ? match[2] : null;
             }
 
-            // --- Initial Load ---
-            loadVideo(currentVideoIndex);
+            checkTaskStateOnLoad();
         });
     </script>
 </body>
