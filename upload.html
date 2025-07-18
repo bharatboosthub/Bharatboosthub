@@ -1,138 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Promote Your Video - Bharat Boost Hub</title>
-  <meta name="description" content="Submit your YouTube video for promotion to the Bharat Boost Hub community." />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-  <style> body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; } </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Promote Your Video - Bharat Boost Hub</title>
+    <meta name="description" content="Submit your YouTube video for promotion to the Bharat Boost Hub community." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style> 
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; } 
+    </style>
 </head>
 <body class="antialiased">
-  <header class="bg-white border-b">
-    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-      <h1 class="text-lg font-bold text-gray-800">Bharat Boost Hub</h1>
-      <div class="flex items-center space-x-2 bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-semibold">
-        <span class="material-symbols-outlined !text-base text-amber-600">monetization_on</span>
-        <span id="coin-balance">...</span><span>Coins</span>
-      </div>
-    </div>
-  </header>
-
-  <main class="container mx-auto px-6 py-8">
-    <a href="dashboard.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 font-medium transition-colors">
-      <span class="material-symbols-outlined">arrow_back</span><span class="ml-1">Back to Dashboard</span>
-    </a>
-
-    <div id="upload-view" class="hidden bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
-      <div class="text-center">
-        <h2 class="text-2xl font-bold text-gray-800">Promote Your Video</h2>
-        <p class="text-gray-500 mt-2">Enter the URL of the YouTube video you want to promote.</p>
-        <p class="text-sm font-semibold text-red-600 mt-2">Cost: 5 Coins</p>
-      </div>
-      <form id="promotion-form" class="mt-8 space-y-6">
-        <div>
-          <label for="video-url" class="block text-sm font-medium text-gray-700 mb-1">YouTube Video URL</label>
-          <input type="text" id="video-url" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="https://www.youtube.com/watch?v=..." required />
+    <header class="bg-white border-b">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <h1 class="text-lg font-bold text-gray-800">Bharat Boost Hub</h1>
+            <div class="flex items-center space-x-2 bg-amber-100 text-amber-800 px-3 py-1 rounded-full font-semibold">
+                <span class="material-symbols-outlined !text-base text-amber-600">monetization_on</span>
+                <span id="coin-balance">...</span><span>Coins</span>
+            </div>
         </div>
-        <div id="video-preview" class="hidden aspect-video bg-gray-200 rounded-lg overflow-hidden"></div>
-        <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-all text-lg shadow-md hover:shadow-lg hover:transform hover:-translate-y-0.5">Submit for Promotion</button>
-      </form>
-    </div>
+    </header>
 
-    <div id="insufficient-funds-view" class="hidden bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto text-center">
-      <span class="material-symbols-outlined text-red-500 !text-6xl">error</span>
-      <h2 class="text-2xl font-bold text-gray-800 mt-4">Insufficient Coins</h2>
-      <p class="text-gray-500 mt-2">You need at least 5 coins to promote a video.</p>
-      <a href="earn.html" class="inline-block mt-6 bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition font-bold text-lg shadow-md hover:shadow-lg">Earn More Coins</a>
-    </div>
-  </main>
+    <main class="container mx-auto px-6 py-8">
+        <a href="dashboard.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 font-medium transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span><span class="ml-1">Back to Dashboard</span>
+        </a>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+        <!-- View for Uploading -->
+        <div id="upload-view" class="hidden bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+            <div class="text-center">
+                <h2 class="text-2xl font-bold text-gray-800">Promote Your Video</h2>
+                <p class="text-gray-500 mt-2">Enter the URL of the YouTube video you want to promote.</p>
+                <p class="text-sm font-semibold text-red-600 mt-2">Cost: 5 Coins</p>
+            </div>
+            <form id="promotion-form" class="mt-8 space-y-6">
+                <div>
+                    <label for="video-url" class="block text-sm font-medium text-gray-700 mb-1">YouTube Video URL</label>
+                    <input type="text" id="video-url" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="https://www.youtube.com/watch?v=..." required />
+                </div>
+                <div id="video-preview" class="hidden aspect-video bg-gray-200 rounded-lg overflow-hidden"></div>
+                <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-all text-lg shadow-md hover:shadow-lg hover:transform hover:-translate-y-0.5">Submit for Promotion</button>
+            </form>
+        </div>
 
-  <script>
-    // ✅ Your Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBOnW5Mv5YYquR119_Nn1ViprMVV00ubbM",
-      authDomain: "bharat-boost-hub.firebaseapp.com",
-      projectId: "bharat-boost-hub",
-      storageBucket: "bharat-boost-hub.appspot.com",
-      messagingSenderId: "1047323522415",
-      appId: "1:1047323522415:web:abc123def456", // use actual App ID if needed
-    };
+        <!-- View for Insufficient Funds -->
+        <div id="insufficient-funds-view" class="hidden bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto text-center">
+            <span class="material-symbols-outlined text-red-500 !text-6xl">error</span>
+            <h2 class="text-2xl font-bold text-gray-800 mt-4">Insufficient Coins</h2>
+            <p class="text-gray-500 mt-2">You need at least 5 coins to promote a video.</p>
+            <a href="earn.html" class="inline-block mt-6 bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition font-bold text-lg shadow-md hover:shadow-lg">Earn More Coins</a>
+        </div>
+    </main>
 
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    <!-- Firebase SDKs (Using v8 for compatibility with your code) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-    const coinBalanceEl = document.getElementById('coin-balance');
-    const uploadView = document.getElementById('upload-view');
-    const insufficientFundsView = document.getElementById('insufficient-funds-view');
-    const promotionForm = document.getElementById('promotion-form');
-    const videoUrlInput = document.getElementById('video-url');
-    const videoPreview = document.getElementById('video-preview');
+    <script>
+        // Your Firebase config from the screenshot
+        const firebaseConfig = {
+            apiKey: "AIzaSyBOnW5Mv5YYquR1I9_Nn1ViprMVVOoubbM",
+            authDomain: "bharat-boost-hub.firebaseapp.com",
+            projectId: "bharat-boost-hub",
+            storageBucket: "bharat-boost-hub.appspot.com",
+            messagingSenderId: "1047323522415",
+            appId: "1:1047323522415:web:4972c0bce15ae7253de49a"
+        };
 
-    document.addEventListener('DOMContentLoaded', () => {
-      let currentCoins = parseInt(localStorage.getItem('userCoins') || '0');
-      coinBalanceEl.textContent = currentCoins;
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-      if (currentCoins >= 5) {
-        uploadView.classList.remove('hidden');
-      } else {
-        insufficientFundsView.classList.remove('hidden');
-      }
-    });
+        // Get references to all the UI elements
+        const coinBalanceEl = document.getElementById('coin-balance');
+        const uploadView = document.getElementById('upload-view');
+        const insufficientFundsView = document.getElementById('insufficient-funds-view');
+        const promotionForm = document.getElementById('promotion-form');
+        const videoUrlInput = document.getElementById('video-url');
+        const videoPreview = document.getElementById('video-preview');
 
-    promotionForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+        // This function runs when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get the current coin balance from the browser's local storage
+            let currentCoins = parseInt(localStorage.getItem('userCoins') || '0');
+            coinBalanceEl.textContent = currentCoins;
 
-      let currentCoins = parseInt(localStorage.getItem('userCoins') || '0');
-      if (currentCoins < 5) {
-        alert('Error: Insufficient coins.');
-        return;
-      }
-
-      const videoUrl = videoUrlInput.value.trim();
-      const videoId = getYouTubeVideoId(videoUrl);
-      if (!videoId) {
-        alert('Please enter a valid YouTube video URL.');
-        return;
-      }
-
-      const uploaderId = localStorage.getItem('currentUserId') || 'anonymous';
-
-      try {
-        await db.collection('promotedVideos').add({
-          uploaderId,
-          url: videoUrl,
-          createdAt: new Date()
+            // Show either the upload form or the "insufficient funds" message
+            if (currentCoins >= 5) {
+                uploadView.classList.remove('hidden');
+            } else {
+                insufficientFundsView.classList.remove('hidden');
+            }
         });
 
-        currentCoins -= 5;
-        localStorage.setItem('userCoins', currentCoins);
-        alert('Video submitted successfully! 5 coins have been deducted.');
-        window.location.href = 'dashboard.html';
-      } catch (err) {
-        alert('Error uploading video: ' + err.message);
-      }
-    });
+        // This function runs when the user clicks the "Submit" button
+        promotionForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Prevent the form from reloading the page
 
-    videoUrlInput.addEventListener('input', () => {
-      const videoId = getYouTubeVideoId(videoUrlInput.value);
-      videoPreview.classList.toggle('hidden', !videoId);
-      if (videoId) {
-        videoPreview.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-      }
-    });
+            let currentCoins = parseInt(localStorage.getItem('userCoins') || '0');
+            if (currentCoins < 5) {
+                alert('Error: Insufficient coins.');
+                return;
+            }
 
-    function getYouTubeVideoId(url) {
-      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-      const match = url.match(regExp);
-      return (match && match[2].length === 11) ? match[2] : null;
-    }
-  </script>
+            const videoUrl = videoUrlInput.value.trim();
+            const videoId = getYouTubeVideoId(videoUrl);
+            if (!videoId) {
+                alert('Please enter a valid YouTube video URL.');
+                return;
+            }
+
+            // Get the user's ID from local storage (set on the dashboard page)
+            const uploaderId = localStorage.getItem('currentUserId') || 'anonymous';
+
+            try {
+                // Add the video data to your 'promotedVideos' collection in Firestore
+                await db.collection('promotedVideos').add({
+                    uploaderId: uploaderId,
+                    url: videoUrl,
+                    createdAt: new Date() // Use a server timestamp for accuracy
+                });
+
+                // If successful, deduct coins from local storage
+                currentCoins -= 5;
+                localStorage.setItem('userCoins', currentCoins);
+
+                alert('Video submitted successfully! 5 coins have been deducted.');
+                window.location.href = 'dashboard.html'; // Go back to the dashboard
+            } catch (err) {
+                console.error("Error writing document: ", err);
+                alert('Error uploading video: ' + err.message);
+            }
+        });
+
+        // This function shows the video preview as the user types the URL
+        videoUrlInput.addEventListener('input', () => {
+            const videoId = getYouTubeVideoId(videoUrlInput.value);
+            videoPreview.classList.toggle('hidden', !videoId);
+            if (videoId) {
+                videoPreview.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+            }
+        });
+
+        // Helper function to get the video ID from a YouTube URL
+        function getYouTubeVideoId(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+    </script>
 </body>
-</html>
+</html>```
