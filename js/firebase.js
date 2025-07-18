@@ -1,6 +1,7 @@
 /*
  * Bharat Boost Hub - Firebase Core Setup & Authentication
  * /js/firebase.js
+ * Last Updated: July 18, 2025
  */
 
 // Import necessary functions from the Firebase SDKs
@@ -10,7 +11,10 @@ import {
     onAuthStateChanged, 
     GoogleAuthProvider, 
     signInWithPopup, 
-    signOut 
+    signOut,
+    // Added functions for email/password auth
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
 import { 
     getFirestore, 
@@ -33,14 +37,14 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-storage.js";
 
 
-// Your web app's Firebase configuration, as provided
+// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AlzaSyBOnW5Mv5YYquR119_Nn1ViprMVV00ubbM", // NOTE: User provided key starts with Alza, not AIza. Using as is.
+    apiKey: "AIzaSyBOnW5Mv5YYquR1I9_Nn1ViprMVV0OubbM",
     authDomain: "bharat-boost-hub.firebaseapp.com",
     projectId: "bharat-boost-hub",
     storageBucket: "bharat-boost-hub.appspot.com",
     messagingSenderId: "1047323522415",
-    appId: "1:1047323522415:web:e6c5a0c8d8a7b9c6f0a1b2" // Generated a plausible App ID
+    appId: "1:1047323522415:web:4972c0bce15ae7253de49a"
 };
 
 // Initialize Firebase
@@ -54,112 +58,66 @@ const provider = new GoogleAuthProvider();
 
 // --- Core User and Auth Functions ---
 
-/**
- * Handles the Google Sign-In process.
- * After successful login, it checks for an existing user record in Firestore.
- * If the user is new, it creates a new record with a starting coin balance.
- */
 const handleGoogleLogin = async () => {
     try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
-
-        // Check if user exists in Firestore
         const userRef = doc(db, "users", user.uid);
         const userSnap = await getDoc(userRef);
 
         if (!userSnap.exists()) {
-            // User is new, create a document for them
             await setDoc(userRef, {
                 uid: user.uid,
                 displayName: user.displayName,
                 email: user.email,
                 photoURL: user.photoURL,
-                coinBalance: 100, // Welcome gift of 100 coins
+                coinBalance: 100,
                 createdAt: serverTimestamp()
             });
-            console.log("New user created in Firestore.");
-        } else {
-            console.log("Returning user logged in.");
         }
-
-        // Redirect to dashboard after successful login
-        window.location.href = 'dashboard.html';
-
+        // The onAuthStateChanged listener will handle the redirect automatically
     } catch (error) {
         console.error("Google Login Error:", error);
-        // Display error to the user on the login page
-        const errorElement = document.getElementById('login-error');
-        if(errorElement) {
-            errorElement.textContent = `Login failed: ${error.message}`;
-            errorElement.classList.remove('hidden');
-        }
+        // You can add a user-facing error message here if needed
     }
 };
 
-/**
- * Handles the user logout process.
- */
 const handleLogout = () => {
-    signOut(auth).then(() => {
-        console.log("User signed out.");
-        window.location.href = 'login.html';
-    }).catch((error) => {
+    signOut(auth).catch((error) => {
         console.error("Logout Error:", error);
     });
 };
 
-
-/**
- * Retrieves the currently logged-in user's data from Firestore.
- * @returns {Promise<object|null>} A promise that resolves with the user's data object, or null if not found.
- */
 const getCurrentUserData = async () => {
     const user = auth.currentUser;
     if (!user) return null;
-
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-        return { id: userSnap.id, ...userSnap.data() };
-    } else {
-        console.error("No user data found in Firestore for logged-in user.");
-        return null;
-    }
+    return userSnap.exists() ? { id: userSnap.id, ...userSnap.data() } : null;
 };
 
 
-// --- Route Protection and Auth State Management ---
-
-/**
- * This is the central function that manages user sessions.
- * It runs when the page loads and whenever the auth state changes.
- * It protects pages that require a login and redirects users accordingly.
- */
+// --- This is now the ONLY auth state listener for the entire site ---
+// It handles all redirects, preventing loops.
 onAuthStateChanged(auth, (user) => {
     const currentPage = window.location.pathname.split('/').pop();
     const protectedPages = ['dashboard.html', 'upload.html', 'watch.html', 'coins.html'];
-    const publicPages = ['login.html', 'index.html', 'about.html', 'contact.html', 'privacy.html', 'terms.html', 'disclaimer.html', '']; // '' for root
-
+    
     if (user) {
-        // User is signed in
+        // If user is logged in and tries to visit login.html, redirect them to the dashboard.
         if (currentPage === 'login.html') {
-            // If user is on login page, redirect to dashboard
             window.location.href = 'dashboard.html';
         }
     } else {
-        // User is not signed in
+        // If user is not logged in and tries to visit a protected page, redirect them to login.
         if (protectedPages.includes(currentPage)) {
-            // If user tries to access a protected page, redirect to login
-            console.log("Access denied. Redirecting to login.");
             window.location.href = 'login.html';
         }
     }
 });
 
 
-// Export all the necessary services and functions to be used in main.js
+// Export all necessary functions to be used by main.js
 export {
     auth,
     db,
@@ -167,6 +125,8 @@ export {
     handleGoogleLogin,
     handleLogout,
     getCurrentUserData,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
     doc,
     setDoc,
     getDoc,
@@ -181,3 +141,6 @@ export {
     uploadBytes,
     getDownloadURL
 };
+```
+
+After saving this file, please let me know, and I will provide the final corrected file, **`main.js`
