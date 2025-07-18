@@ -3,6 +3,18 @@
   "version": "1.0.0",
   "description": "Backend for the YouTube promotion app",
   "main": "index.js",
+  "license": "MIT",
+  "author": "Bharat Bhushan <bharatboosthub@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://bharatboosthub.github.io/Bharatboosthub"
+  },
+  "keywords": [
+    "youtube",
+    "promotion",
+    "express",
+    "nodejs"
+  ],
   "scripts": {
     "start": "node index.js"
   },
