@@ -16,9 +16,8 @@
 </head>
 <body class="antialiased">
 
-    <!-- Header -->
+    <!-- Header (Responsive) -->
     <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-700/50">
-        <!-- Responsive Adjustment: Consistent with dashboard -->
         <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
             <a href="dashboard.html" class="flex items-center space-x-3">
                 <div class="bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">BB</div>
@@ -35,7 +34,6 @@
         </nav>
     </header>
 
-    <!-- Responsive Adjustment: Adjusted padding for main content and form container -->
     <main class="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div class="max-w-2xl mx-auto bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg">
             <h1 class="text-2xl sm:text-3xl font-bold text-white mb-2">Promote Your Video</h1>
@@ -43,9 +41,9 @@
             
             <div id="upload-form">
                 <label for="video-url" class="font-semibold text-gray-300">YouTube Video URL</label>
-                <input type="text" id="video-url" class="w-full mt-2 px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-700 text-white placeholder-gray-400">
+                <input type="text" id="video-url" class="w-full mt-2 px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-700 text-white placeholder-gray-400" placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                 
-                <button id="submit-video-btn" class="w-full mt-6 bg-red-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-lg hover:shadow-red-500/50">
+                <button id="submit-video-btn" class="w-full mt-6 bg-red-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-lg hover:shadow-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed">
                     Promote Now (Cost: 5 Coins)
                 </button>
             </div>
@@ -55,18 +53,28 @@
     </main>
 
     <script>
-        // JavaScript functionality remains the same
         document.addEventListener('DOMContentLoaded', () => {
             const coinBalanceEl = document.getElementById('coin-balance');
             const submitBtn = document.getElementById('submit-video-btn');
             const videoUrlInput = document.getElementById('video-url');
             const feedbackMessageEl = document.getElementById('feedback-message');
+            
+            // The API_URL is the domain of your Vercel deployment.
+            // Leaving it as '' works when the frontend and backend are on the same domain.
+            const API_URL = ''; 
             const UPLOAD_COST = 5;
+
+            // Still use localStorage for client-side session info (user ID and coins)
             let user = JSON.parse(localStorage.getItem('bb_user'));
-            if (!user) { window.location.href = 'login.html'; return; }
-            function updateCoinDisplay() {
-                coinBalanceEl.textContent = JSON.parse(localStorage.getItem('bb_user')).coins;
+            if (!user) {
+                window.location.href = 'login.html'; 
+                return;
             }
+
+            function updateCoinDisplay() {
+                coinBalanceEl.textContent = user.coins;
+            }
+
             function getYouTubeVideoId(url) {
                 try {
                     const urlObj = new URL(url);
@@ -75,29 +83,66 @@
                     return null;
                 } catch (e) { return null; }
             }
-            submitBtn.addEventListener('click', () => {
+
+            async function handleSubmitVideo() {
+                submitBtn.disabled = true; // Prevent multiple clicks
+                feedbackMessageEl.textContent = 'Submitting...';
+                feedbackMessageEl.className = "text-yellow-400 text-center mt-4 font-medium h-6";
+
                 const youtubeId = getYouTubeVideoId(videoUrlInput.value.trim());
+
                 if (!youtubeId) {
                     feedbackMessageEl.textContent = "Please enter a valid YouTube URL.";
-                    feedbackMessageEl.className = "text-yellow-400 text-center mt-4 font-medium h-6";
+                    feedbackMessageEl.className = "text-red-500 text-center mt-4 font-medium h-6";
+                    submitBtn.disabled = false;
                     return;
                 }
-                let currentUser = JSON.parse(localStorage.getItem('bb_user'));
-                if (currentUser.coins < UPLOAD_COST) {
+
+                if (user.coins < UPLOAD_COST) {
                     feedbackMessageEl.textContent = "Not enough coins!";
                     feedbackMessageEl.className = "text-red-500 text-center mt-4 font-medium h-6";
+                    submitBtn.disabled = false;
                     return;
                 }
-                currentUser.coins -= UPLOAD_COST;
-                localStorage.setItem('bb_user', JSON.stringify(currentUser));
-                updateCoinDisplay();
-                let allVideos = JSON.parse(localStorage.getItem('bb_videos')) || [];
-                allVideos.push({ id: `vid_${Date.now()}`, youtubeId: youtubeId, uploaderId: currentUser.id });
-                localStorage.setItem('bb_videos', JSON.stringify(allVideos));
-                feedbackMessageEl.textContent = "Video successfully submitted!";
-                feedbackMessageEl.className = "text-green-400 text-center mt-4 font-medium h-6";
-                setTimeout(() => window.location.href = 'dashboard.html', 1500);
-            });
+
+                try {
+                    // Use fetch to send data to the backend API
+                    const response = await fetch(`${API_URL}/api/videos`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            youtubeId: youtubeId,
+                            uploaderId: user.id 
+                        }),
+                    });
+
+                    if (!response.ok) {
+                        // Handle server errors
+                        throw new Error('Server responded with an error');
+                    }
+                    
+                    // --- Client-side coin deduction ---
+                    // Ideally, this should be handled by the backend to prevent cheating.
+                    user.coins -= UPLOAD_COST;
+                    localStorage.setItem('bb_user', JSON.stringify(user));
+                    updateCoinDisplay();
+
+                    feedbackMessageEl.textContent = "Video submitted successfully!";
+                    feedbackMessageEl.className = "text-green-400 text-center mt-4 font-medium h-6";
+
+                    setTimeout(() => window.location.href = 'dashboard.html', 1500);
+
+                } catch (error) {
+                    console.error('Failed to submit video:', error);
+                    feedbackMessageEl.textContent = "Submission failed. Please try again.";
+                    feedbackMessageEl.className = "text-red-500 text-center mt-4 font-medium h-6";
+                    submitBtn.disabled = false;
+                }
+            }
+            
+            submitBtn.addEventListener('click', handleSubmitVideo);
             updateCoinDisplay();
         });
     </script>
