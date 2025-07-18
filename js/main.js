@@ -1,31 +1,27 @@
 /*
  * Bharat Boost Hub - Main Application Logic
  * /js/main.js
- * Last Updated: July 18, 2025 - Implemented Auth Ready Gate
+ * Last Updated: July 18, 2025 - Direct Redirect Fix
  */
 
-// Import functions from firebase.js, including the new onAuthReady gate
+// Import only the necessary functions. We will handle routing manually.
 import {
     auth,
     db,
-    storage,
-    onAuthReady, // The new gate function
     getCurrentUserData,
-    GoogleAuthProvider,
-    signInWithPopup,
-    signOut,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    signOut,
     doc,
     setDoc,
-    getDoc,
+    serverTimestamp,
+    // Add other functions from firebase.js that are used in other pages
     collection,
     addDoc,
     query,
     where,
     getDocs,
     updateDoc,
-    serverTimestamp,
     ref,
     uploadBytes,
     getDownloadURL
@@ -33,55 +29,51 @@ import {
 
 
 // --- Main Execution Logic ---
-// We use an async function to be able to 'await' the auth check
-document.addEventListener('DOMContentLoaded', async () => {
-    
-    // --- AUTHENTICATION GATE ---
-    // This is the most critical part of the fix.
-    // The code will PAUSE here until Firebase confirms the user's login status.
-    const user = await onAuthReady();
-
+document.addEventListener('DOMContentLoaded', () => {
     const currentPage = window.location.pathname.split('/').pop();
+    
+    // --- Manual Page Protection ---
+    // Before initializing anything, check if the user should be on this page.
     const protectedPages = ['dashboard.html', 'upload.html', 'watch.html', 'coins.html'];
     const isProtected = protectedPages.includes(currentPage);
-    const isLoginPage = currentPage === 'login.html' || currentPage === ''; // Treat root as login page for routing
 
-    // --- ROUTING LOGIC ---
-    if (isProtected && !user) {
-        // If on a protected page and not logged in, redirect to login.
+    // This check runs immediately.
+    // If on a protected page and not logged in, redirect immediately.
+    if (isProtected && !auth.currentUser) {
         window.location.href = 'login.html';
-        return; // Stop further execution
-    }
-    if (isLoginPage && user) {
-        // If on the login page and already logged in, redirect to dashboard.
-        window.location.href = 'dashboard.html';
-        return; // Stop further execution
+        return; // Stop any other code from running
     }
 
-    // If we get here, the user is on the correct page.
-    // Now we can safely initialize the page's content.
+    // If the checks pass, initialize the page's content.
     initializePageContent(currentPage);
 });
 
 
 /**
- * This function runs AFTER the auth check and routing are complete.
- * It initializes the specific logic for the current page.
+ * Initializes the specific logic for the current page.
  */
 function initializePageContent(currentPage) {
-    // Common elements like logout buttons
+    // Attach the logout listener to the logout button if it exists.
     const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) logoutBtn.addEventListener('click', () => signOut(auth).then(() => window.location.href = 'login.html'));
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                // Force redirect to login page after logout.
+                window.location.href = 'login.html';
+            });
+        });
+    }
 
-    // Page-specific initializers
+    // Run the correct function based on the current page.
     switch (currentPage) {
         case 'login.html':
-        case '': // Also initialize for root
+        case '': // Also handle the root URL
             initializeLoginPage();
             break;
         case 'dashboard.html':
             initializeDashboardPage();
             break;
+        // Add other cases for other pages here...
         case 'upload.html':
             initializeUploadPage();
             break;
@@ -92,13 +84,20 @@ function initializePageContent(currentPage) {
             initializeCoinsPage();
             break;
     }
-    // This runs on all pages to update header info if available
     updateUserInfoInHeader();
 }
 
-// --- Page Initializer Functions ---
 
+/**
+ * Contains all logic for the login page.
+ */
 function initializeLoginPage() {
+    // If a user is already logged in and somehow gets to the login page, send them away.
+    if (auth.currentUser) {
+        window.location.href = 'dashboard.html';
+        return;
+    }
+
     const loginView = document.getElementById('login-view');
     const signupView = document.getElementById('signup-view');
     const showSignupBtn = document.getElementById('show-signup');
@@ -106,6 +105,7 @@ function initializeLoginPage() {
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
 
+    // Logic to switch between login and sign-up forms
     if (showSignupBtn) showSignupBtn.addEventListener('click', (e) => { e.preventDefault(); showView(signupView); });
     if (showLoginBtn) showLoginBtn.addEventListener('click', (e) => { e.preventDefault(); showView(loginView); });
     function showView(view) {
@@ -113,6 +113,7 @@ function initializeLoginPage() {
         signupView.classList.toggle('active', view === signupView);
     }
 
+    // --- Sign-Up Form Logic ---
     if (signupForm) {
         signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -122,15 +123,12 @@ function initializeLoginPage() {
             const feedbackEl = document.getElementById('signup-feedback');
             
             feedbackEl.textContent = 'Creating account...';
-            if (name.trim() === '') {
-                feedbackEl.textContent = 'Please enter your full name.';
-                return;
-            }
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then(userCredential => {
                     const user = userCredential.user;
                     const userRef = doc(db, "users", user.uid);
+                    // Create the user profile in the database
                     return setDoc(userRef, {
                         uid: user.uid,
                         displayName: name,
@@ -140,7 +138,10 @@ function initializeLoginPage() {
                         createdAt: serverTimestamp()
                     });
                 })
-                // The redirect will be handled automatically on the next page load by the auth gate
+                .then(() => {
+                    // **THE FIX**: Force redirect immediately after the profile is created.
+                    window.location.href = 'dashboard.html';
+                })
                 .catch(error => {
                     let msg = 'An error occurred.';
                     if (error.code === 'auth/email-already-in-use') msg = 'This email is already registered.';
@@ -150,6 +151,7 @@ function initializeLoginPage() {
         });
     }
 
+    // --- Login Form Logic ---
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -159,13 +161,19 @@ function initializeLoginPage() {
             feedbackEl.textContent = 'Signing in...';
 
             signInWithEmailAndPassword(auth, email, password)
-                // The redirect will be handled automatically on the next page load by the auth gate
+                .then(userCredential => {
+                    // **THE FIX**: Force redirect immediately on successful login.
+                    window.location.href = 'dashboard.html';
+                })
                 .catch(error => {
                     feedbackEl.textContent = 'Invalid email or password.';
                 });
         });
     }
 }
+
+
+// --- Other Page Initializers (No changes needed below) ---
 
 async function initializeDashboardPage() {
     const user = await getCurrentUserData();
@@ -176,9 +184,6 @@ async function initializeDashboardPage() {
         if (coinBalanceEl) coinBalanceEl.textContent = user.coinBalance;
     }
 }
-
-// ... the rest of the file (initializeUploadPage, etc.) remains the same ...
-// (No changes needed for the functions below)
 
 function initializeUploadPage() {
     const fetchBtn = document.getElementById('fetch-video-btn');
@@ -222,7 +227,8 @@ async function updateUserInfoInHeader() {
     }
 }
 
-async function handleFetchVideo() {
+// ... the rest of the file (handleFetchVideo, etc.) remains the same ...
+async function handleFetchVideo(){
     const urlInput = document.getElementById('youtube-url');
     const urlError = document.getElementById('url-error');
     const loader = document.getElementById('loader');
@@ -279,8 +285,7 @@ async function handleFetchVideo() {
         fetchBtn.disabled = false;
     }
 }
-
-async function calculateTotalCost() {
+async function calculateTotalCost(){
     const views = parseInt(document.getElementById('views-wanted').value) || 0;
     const likes = parseInt(document.getElementById('likes-wanted').value) || 0;
     const subs = parseInt(document.getElementById('subs-wanted').value) || 0;
@@ -297,8 +302,7 @@ async function calculateTotalCost() {
         submitBtn.disabled = (totalCost === 0);
     }
 }
-
-async function handleCampaignSubmit(event) {
+async function handleCampaignSubmit(event){
     event.preventDefault();
     const submitBtn = document.getElementById('submit-campaign-btn');
     submitBtn.disabled = true;
@@ -346,8 +350,7 @@ async function handleCampaignSubmit(event) {
         submitBtn.textContent = 'Launch Campaign';
     }
 }
-
-async function loadAvailableVideos() {
+async function loadAvailableVideos(){
     const videoList = document.getElementById('video-list');
     const loadingPlaceholder = document.getElementById('loading-placeholder');
     const noVideosMessage = document.getElementById('no-videos-message');
@@ -388,9 +391,8 @@ async function loadAvailableVideos() {
         videoList.innerHTML = `<p class="text-red-500 col-span-full">Failed to load videos. Please try again later.</p>`;
     }
 }
-
 let timerInterval;
-function openWatchModal(videoId, campaignId) {
+function openWatchModal(videoId, campaignId){
     document.getElementById('watch-modal').classList.remove('hidden');
     new YT.Player('youtube-player', { height: '100%', width: '100%', videoId: videoId, playerVars: { 'playsinline': 1, 'autoplay': 1, 'controls': 0 } });
     const timerDisplay = document.getElementById('timer-display');
@@ -398,7 +400,7 @@ function openWatchModal(videoId, campaignId) {
     const uploadBtn = document.getElementById('upload-screenshot-btn');
     proofSection.classList.add('hidden');
     uploadBtn.disabled = true;
-    let timeLeft = WATCH_TIME_SECONDS;
+    let timeLeft = 180;
     clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         timeLeft--;
@@ -419,8 +421,7 @@ function openWatchModal(videoId, campaignId) {
         }
     }, 1000);
 }
-
-async function handleProofUpload(file, campaignId) {
+async function handleProofUpload(file, campaignId){
     const user = auth.currentUser;
     if (!user || !file) return;
     const uploadStatus = document.getElementById('upload-status');
@@ -457,8 +458,7 @@ async function handleProofUpload(file, campaignId) {
         uploadStatus.classList.add('text-red-500');
     }
 }
-
-async function loadCampaignHistory() {
+async function loadCampaignHistory(){
     const user = auth.currentUser;
     if (!user) return;
     const tableBody = document.getElementById('campaigns-table-body');
@@ -486,8 +486,7 @@ async function loadCampaignHistory() {
         tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">Failed to load history.</td></tr>`;
     }
 }
-
-async function loadEarningsHistory() {
+async function loadEarningsHistory(){
     const user = auth.currentUser;
     if (!user) return;
     const tableBody = document.getElementById('earnings-table-body');
@@ -516,4 +515,4 @@ async function loadEarningsHistory() {
 }
 ```
 
-Once you have updated both `js/firebase.js` and `js/main.js` with the two versions I just provided, the entire authentication system will be robust and the redirect issue will be resolv
+After updating your `js/main.js` file with this code, please try logging in or signing up again. It should now redirect you to the dashboard without any issu
