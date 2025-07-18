@@ -1,33 +1,18 @@
 // Load environment variables from .env file
 require('dotenv').config();
 
-const express = require('express');
-const cors = require('cors');
+const express = 'express';
+const cors = 'cors';
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const app = express();
 
-// --- NEW: CORS Configuration ---
-// List of websites that are allowed to connect to this server
-const allowedOrigins = [
-    'https://bharatboosthub.github.io', // <--- IMPORTANT: REPLACE THIS with your actual frontend URL if it's different
-    // You can add more URLs here if needed
-];
+// --- TEMPORARY CORS FIX ---
+// This will allow requests from ANY origin.
+// This is for testing only.
+app.use(cors()); 
 
-const corsOptions = {
-    origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
-            const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    }
-};
-
-// Use the new CORS options
-app.use(cors(corsOptions));
+// We still need this to read the data from the upload form
 app.use(express.json());
 
 
@@ -52,9 +37,9 @@ async function connectToDb() {
 }
 
 
-// --- API ENDPOINTS ---
+// --- API ENDPOINTS (No changes needed here) ---
 app.get('/', (req, res) => {
-    res.send('Welcome to the Bharat Boost Hub API! Server is running and configured for CORS.');
+    res.send('Welcome to the Bharat Boost Hub API! CORS is open for testing.');
 });
 
 // GET videos from the database
