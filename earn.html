@@ -4,170 +4,68 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Earn Coins - Bharat Boost Hub</title>
-  <meta name="description" content="Watch videos from other creators, engage with their content, and earn coins to promote your own channel."/>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-  <style>body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }</style>
+  <style> body { font-family: 'Inter', sans-serif; background-color: #f9fafb; } </style>
 </head>
-<body class="antialiased">
-  <header class="bg-white border-b">
-    <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-      <h1 class="text-lg font-bold text-gray-800">Bharat Boost Hub</h1>
-      <a href="dashboard.html" class="inline-flex items-center text-gray-600 hover:text-gray-900 font-medium transition-colors">
-        <span class="material-symbols-outlined">arrow_back</span><span class="ml-1">Back to Dashboard</span>
-      </a>
-    </div>
-  </header>
-
-  <main class="container mx-auto px-6 py-8">
-    <div id="earn-container" class="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-3xl mx-auto hidden">
-      <div id="start-view" class="hidden">
-        <div class="text-center">
-          <h2 class="text-2xl font-bold text-gray-800">Complete the Task to Earn</h2>
-          <p class="text-gray-500 mt-1">Click below, engage for 3 minutes, then return to claim.</p>
-        </div>
-        <div id="video-thumbnail-area" class="my-6 aspect-video bg-black rounded-lg overflow-hidden shadow-inner"></div>
-        <button id="start-task-btn" class="w-full bg-red-600 text-white font-bold py-3 text-lg rounded-lg hover:bg-red-700 transition-all shadow-md">Start Task & Open YouTube</button>
-      </div>
-
-      <div id="waiting-view" class="hidden text-center">
-        <h2 class="text-2xl font-bold text-gray-800">Task in Progress...</h2>
-        <p class="text-gray-500 mt-1">Return to this page after engaging with the video.</p>
-        <div class="my-8"><div class="text-5xl font-bold text-red-600" id="timer-display">03:00</div></div>
-      </div>
-
-      <div id="claim-view" class="hidden text-center">
-        <span class="material-symbols-outlined text-green-500 !text-6xl">task_alt</span>
-        <h2 class="text-2xl font-bold text-green-500 mt-2">Task Complete!</h2>
-        <button id="claim-btn" class="w-full max-w-sm mx-auto mt-8 bg-green-500 text-white font-bold py-3 text-lg rounded-lg hover:bg-green-600 shadow-lg">Claim Reward (+1 Coin)</button>
-      </div>
-    </div>
-
-    <div id="no-videos-container" class="hidden text-center bg-white p-12 rounded-lg shadow-lg max-w-3xl mx-auto">
-      <span class="material-symbols-outlined text-gray-400 !text-6xl">hourglass_empty</span>
-      <h3 class="text-2xl font-bold text-gray-800 mt-4">No Videos to Watch</h3>
-      <p class="text-gray-600 mt-2">There are currently no videos from other users to review. Check back later!</p>
-    </div>
-  </main>
+<body class="min-h-screen flex flex-col justify-center items-center">
+  <div class="bg-white p-8 rounded-lg shadow-lg max-w-xl text-center">
+    <h1 class="text-2xl font-bold mb-4">Watch and Earn</h1>
+    <p class="text-gray-600 mb-6">Watch a video and earn <strong>5 coins</strong>!</p>
+    <div id="video-container" class="mb-6"></div>
+    <button id="watchBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded shadow transition">Watch Now</button>
+  </div>
 
   <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 
   <script>
+    // ✅ Firebase Config
     const firebaseConfig = {
-      apiKey: "AlzaSyBOnW5Mv5YYquR119_Nn1ViprMVV00ubbM",
+      apiKey: "AIzaSyBOnW5Mv5YYquR119_Nn1ViprMVV00ubbM",
       authDomain: "bharat-boost-hub.firebaseapp.com",
       projectId: "bharat-boost-hub",
-      storageBucket: "bharat-boost-hub.appspot.com",
-      messagingSenderId: "1047323522415",
-      appId: "1:1047323522415:web:xxxx",
-      databaseURL: "https://bharat-boost-hub-default-rtdb.firebaseio.com/"
     };
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.database();
+    const currentUserId = localStorage.getItem('currentUserId') || 'anonymous';
+    let currentVideo = null;
 
-    const earnContainer = document.getElementById('earn-container');
-    const noVideosContainer = document.getElementById('no-videos-container');
-    const startView = document.getElementById('start-view');
-    const waitingView = document.getElementById('waiting-view');
-    const claimView = document.getElementById('claim-view');
-    const thumbnailArea = document.getElementById('video-thumbnail-area');
-    const timerDisplay = document.getElementById('timer-display');
-    const startTaskBtn = document.getElementById('start-task-btn');
-    const claimBtn = document.getElementById('claim-btn');
+    async function loadRandomVideo() {
+      const snapshot = await db.collection('promotedVideos').get();
+      const allVideos = snapshot.docs.map(doc => doc.data());
+      const filteredVideos = allVideos.filter(v => v.uploaderId !== currentUserId);
 
-    let videosToWatch = [];
-    let currentVideoIndex = 0;
-    const requiredWatchTime = 3 * 60 * 1000;
-    let timerInterval;
-
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        const currentUserId = user.uid;
-        db.ref('promotedVideos').once('value', snapshot => {
-          const allVideos = snapshot.val();
-          videosToWatch = [];
-
-          for (const key in allVideos) {
-            const video = allVideos[key];
-            if (video.uploaderId !== currentUserId) {
-              videosToWatch.push(video);
-            }
-          }
-
-          if (videosToWatch.length > 0) {
-            loadVideoForTask(0);
-            earnContainer.classList.remove('hidden');
-          } else {
-            noVideosContainer.classList.remove('hidden');
-          }
-        });
-      } else {
-        window.location.href = 'login.html'; // Redirect if not logged in
-      }
-    });
-
-    function switchView(viewToShow) {
-      [startView, waitingView, claimView].forEach(v => v.classList.add('hidden'));
-      viewToShow.classList.remove('hidden');
-    }
-
-    function loadVideoForTask(index) {
-      if (index >= videosToWatch.length) {
-        earnContainer.classList.add('hidden');
-        noVideosContainer.classList.remove('hidden');
+      if (filteredVideos.length === 0) {
+        document.getElementById('video-container').innerHTML = '<p class="text-red-600">No videos available right now.</p>';
+        document.getElementById('watchBtn').disabled = true;
         return;
       }
 
-      const videoId = getYouTubeVideoId(videosToWatch[index].url);
-      thumbnailArea.innerHTML = `<img src="https://i3.ytimg.com/vi/${videoId}/hqdefault.jpg" class="w-full h-full object-cover" alt="Video Thumbnail">`;
-      switchView(startView);
+      currentVideo = filteredVideos[Math.floor(Math.random() * filteredVideos.length)];
+      const videoId = extractVideoId(currentVideo.url);
+      document.getElementById('video-container').innerHTML = `
+        <iframe width="100%" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+      `;
     }
 
-    function startTask() {
-      localStorage.setItem('taskStartTime', Date.now());
-      localStorage.setItem('taskVideoUrl', videosToWatch[currentVideoIndex].url);
-      window.open(videosToWatch[currentVideoIndex].url, '_blank');
-      switchView(waitingView);
-      updateTimer();
-      timerInterval = setInterval(updateTimer, 1000);
-    }
+    document.getElementById('watchBtn').addEventListener('click', () => {
+      if (!currentVideo) return;
 
-    function updateTimer() {
-      const startTime = parseInt(localStorage.getItem('taskStartTime'), 10);
-      const remainingTime = Math.max(0, requiredWatchTime - (Date.now() - startTime));
-      timerDisplay.textContent = new Date(remainingTime).toISOString().substr(14, 5);
-      if (remainingTime <= 0) {
-        clearInterval(timerInterval);
-        switchView(claimView);
-      }
-    }
+      const currentCoins = parseInt(localStorage.getItem('userCoins') || '0');
+      localStorage.setItem('userCoins', currentCoins + 5);
+      window.location.href = currentVideo.url;
+    });
 
-    function claimReward() {
-      let currentCoins = parseInt(localStorage.getItem('userCoins') || '0');
-      localStorage.setItem('userCoins', currentCoins + 1);
-
-      localStorage.removeItem('taskStartTime');
-      localStorage.removeItem('taskVideoUrl');
-      alert('Congratulations! 1 coin added.');
-      
-      currentVideoIndex++;
-      loadVideoForTask(currentVideoIndex);
-    }
-
-    startTaskBtn.addEventListener('click', startTask);
-    claimBtn.addEventListener('click', claimReward);
-
-    function getYouTubeVideoId(url) {
+    function extractVideoId(url) {
       const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
       const match = url.match(regExp);
       return (match && match[2].length === 11) ? match[2] : null;
     }
+
+    loadRandomVideo();
   </script>
 </body>
 </html>
