@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disclaimer - Bharat Boost Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .disclaimer-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #1f2937; /* gray-800 */
+        }
+        .disclaimer-content p {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-red-600">BharatBoostHub</a>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="login.html" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300">Login / Get Started</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-800 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4">
+            <a href="index.html" class="block py-2 nav-link">Home</a>
+            <a href="about.html" class="block py-2 nav-link">About</a>
+            <a href="contact.html" class="block py-2 nav-link">Contact</a>
+            <a href="login.html" class="block mt-2 bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300 text-center">Login / Get Started</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12 md:py-20">
+        <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-2xl shadow-xl">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-4">Disclaimer</h1>
+            <p class="text-center text-gray-500 mb-10">Last updated: July 18, 2025</p>
+
+            <div class="disclaimer-content text-gray-700">
+                <p>The information provided by Bharat Boost Hub ("we," "us," or "our") on this website is for general informational and promotional exchange purposes only. All information on the site is provided in good faith, however, we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the site.</p>
+
+                <h2>No Affiliation with YouTube</h2>
+                <p>Bharat Boost Hub is an independent, third-party service. It is not affiliated, associated, authorized, endorsed by, or in any way officially connected with YouTube, Google LLC, or any of their subsidiaries or affiliates. The names YouTube and Google as well as related names, marks, emblems, and images are registered trademarks of their respective owners.</p>
+                <p>Our service is designed to operate in compliance with YouTube's Terms of Service. However, it is the user's responsibility to ensure their use of our platform does not violate any of YouTube's policies. We are not responsible for any actions taken against your YouTube channel by YouTube.</p>
+
+                <h2>Service "As Is"</h2>
+                <p>The service is provided on an "AS IS" and "AS AVAILABLE" basis. We do not guarantee that the service will be uninterrupted, timely, secure, or error-free. You agree that your use of the website and our services will be at your sole risk.</p>
+                
+                <h2>No Guarantee of Results</h2>
+                <p>Bharat Boost Hub is a platform for promotional exchange. While we facilitate a community where users can promote their content, we do not guarantee any specific results. We do not promise a specific number of views, likes, subscribers, or any increase in channel performance or monetization. The results of any campaign are dependent on the quality of the content being promoted and the engagement of other platform users.</p>
+
+                <h2>External Links Disclaimer</h2>
+                <p>The site may contain links to other websites or content belonging to or originating from third parties. Such external links, particularly the YouTube videos promoted by users, are not investigated, monitored, or checked for accuracy, adequacy, validity, reliability, availability, or completeness by us. We do not warrant, endorse, guarantee, or assume responsibility for the accuracy or reliability of any information offered by third-party websites linked through the site.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="md:flex justify-between items-center text-center md:text-left">
+                <div>
+                    <h3 class="text-xl font-bold">BharatBoostHub</h3>
+                    <p class="text-gray-400">Community-based promotion for YouTube creators.</p>
+                </div>
+                <div class="mt-6 md:mt-0">
+                    <a href="about.html" class="px-3 hover:text-red-500 transition">About</a>
+                    <a href="terms.html" class="px-3 hover:text-red-500 transition">Terms</a>
+                    <a href="privacy.html" class="px-3 hover:text-red-500 transition">Privacy</a>
+                    <a href="disclaimer.html" class="px-3 hover:text-red-500 transition">Disclaimer</a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-500">
+                <p>&copy; 2024 Bharat Boost Hub. All Rights Reserved.</p>
+                <p class="text-xs mt-2">This platform is not affiliated with or endorsed by YouTube or Google.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
