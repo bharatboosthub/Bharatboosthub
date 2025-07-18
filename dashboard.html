@@ -3,86 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO & Social Media Tags -->
     <title>Dashboard - Bharat Boost Hub</title>
-    <meta name="description" content="Manage your video promotions, track your stats, and grow your YouTube channel with the Bharat Boost Hub dashboard.">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     
-    <style> 
-        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; } 
-        .card { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 15px -1px rgb(0 0 0 / 0.05); border: 1px solid #e5e7eb; } 
-        .btn { transition: all 0.2s ease-in-out; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgb(0 0 0 / 0.1); }
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #111827; color: #d1d5db; }
+        .glass-card { background: rgba(31, 41, 55, 0.5); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
     </style>
 </head>
 <body class="antialiased">
-    <header class="bg-white shadow-sm sticky top-0 z-50"><div class="container mx-auto px-4 sm:px-6 py-3"><div class="flex justify-between items-center"><div class="flex items-center space-x-3"><div class="bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-extrabold text-xl">B</div><div><h1 class="text-gray-800 text-lg font-bold">Bharat Boost Hub</h1></div></div><div class="flex items-center space-x-4"><div class="bg-amber-400 text-amber-900 px-3 py-1 rounded-full flex items-center space-x-1 text-sm font-semibold"><span class="material-symbols-outlined !text-base">monetization_on</span><span id="coin-balance">...</span></div><a href="index.html" class="text-gray-600 hover:text-red-600 font-medium flex items-center space-x-1"><span class="material-symbols-outlined">logout</span><span>Logout</span></a></div></div></div></header>
 
-    <main class="container mx-auto px-4 sm:px-6 py-8">
-        <section id="welcome-message" class="mb-8"><h2 class="text-2xl font-bold text-gray-800">Welcome Creator! 👋</h2></section>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="space-y-6">
-                <div class="card p-6"><h3 class="text-lg font-semibold text-gray-800 mb-4">Upload Your Video</h3><a href="upload.html" class="btn w-full block text-center bg-red-600 text-white py-2.5 rounded-lg font-semibold hover:bg-red-700">Promote Video (Cost: 5 Coins)</a></div>
-                <div class="card p-6"><h3 class="text-lg font-semibold text-gray-800 mb-4">Earn Coins</h3><a href="earn.html" class="btn w-full block text-center bg-green-500 text-white py-2.5 rounded-lg font-semibold hover:bg-green-600">Start Earning Coins</a></div>
+    <!-- Header -->
+    <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-700/50">
+        <!-- Responsive Adjustment: Adjusted padding for different screen sizes -->
+        <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+            <a href="dashboard.html" class="flex items-center space-x-3">
+                <div class="bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">BB</div>
+                <h1 class="font-bold text-lg sm:text-xl text-white hidden sm:block">Bharat Boost Hub</h1>
+            </a>
+            
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <div class="flex items-center space-x-2 bg-yellow-500/20 text-yellow-300 px-3 py-1.5 rounded-lg">
+                    <svg class="w-6 h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                    <span id="coin-balance" class="font-bold text-base sm:text-lg">0</span>
+                </div>
+                <a href="https://youtube.com/@bharatboosthub" target="_blank" class="bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-red-700 transition font-semibold text-sm sm:text-base">Subscribe</a>
+                <a href="login.html" id="logout-btn" class="bg-gray-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-700 transition font-semibold text-sm sm:text-base">Logout</a>
             </div>
-            <div class="card p-6">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">My Promoted Videos</h3>
-                <div id="my-videos-list" class="space-y-3"></div>
-                <div id="no-videos-message" class="hidden text-center border-2 border-dashed border-gray-300 p-8 rounded-lg"><span class="material-symbols-outlined text-gray-400 !text-5xl">cloud_upload</span><p class="mt-2 font-semibold text-gray-700">No videos promoted yet</p></div>
+        </nav>
+    </header>
+
+    <!-- Responsive Adjustment: Adjusted padding and text sizes -->
+    <main class="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <section class="text-center mb-12 sm:mb-16">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3 text-white">Welcome to the Dashboard</h1>
+            <p class="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto">Promote your content or earn coins by engaging with others.</p>
+        </section>
+
+        <!-- Responsive Adjustment: Adjusted gap and card padding -->
+        <section class="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto mb-16 sm:mb-20">
+            <a href="upload.html" class="glass-card p-6 sm:p-8 rounded-xl text-center hover:border-red-500/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <h3 class="text-xl sm:text-2xl font-bold mb-2 text-white">Upload Video</h3>
+                <p class="text-gray-400 text-sm sm:text-base">Cost: 5 coins per promotion.</p>
+            </a>
+            <a href="earn.html" class="glass-card p-6 sm:p-8 rounded-xl text-center hover:border-green-500/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <h3 class="text-xl sm:text-2xl font-bold mb-2 text-white">Watch & Earn</h3>
+                <p class="text-gray-400 text-sm sm:text-base">Earn up to 15 coins per video.</p>
+            </a>
+        </section>
+
+        <section id="promoted-videos">
+            <h2 class="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-10 text-white">Currently Promoted Videos</h2>
+            <!-- Grid is already responsive: 1 col on mobile, 2 on tablet, 3 on desktop -->
+            <div id="videos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <p id="no-videos-msg" class="text-center col-span-full text-gray-500">No videos are being promoted right now. Be the first!</p>
             </div>
-        </div>
+        </section>
     </main>
 
+    <footer class="bg-gray-900/50 mt-16 sm:mt-24 border-t border-gray-700/50">
+        <div class="container mx-auto py-8 px-6 text-center text-gray-500 text-sm">
+            <p>© 2025 Bharat Boost Hub. All Rights Reserved.</p>
+        </div>
+    </footer>
+
     <script>
+        // JavaScript functionality remains the same
         document.addEventListener('DOMContentLoaded', () => {
             const coinBalanceEl = document.getElementById('coin-balance');
-            const myVideosList = document.getElementById('my-videos-list');
-            const noVideosMessage = document.getElementById('no-videos-message');
-
-            // --- USER & COIN LOGIC for localStorage ---
-            function getOrCreateUserId() {
-                let userId = localStorage.getItem('currentUserId');
-                if (!userId) {
-                    userId = 'user_' + Date.now() + Math.random().toString(36).substring(2, 9);
-                    localStorage.setItem('currentUserId', userId);
-                    localStorage.setItem('userCoins', '5'); // Give new users 5 coins
+            const videosGrid = document.getElementById('videos-grid');
+            const noVideosMsg = document.getElementById('no-videos-msg');
+            let user = JSON.parse(localStorage.getItem('bb_user'));
+            if (!user) {
+                user = { id: `user_${Date.now()}`, coins: 5 };
+                localStorage.setItem('bb_user', JSON.stringify(user));
+            }
+            let allVideos = JSON.parse(localStorage.getItem('bb_videos')) || [];
+            function updateCoinDisplay() {
+                coinBalanceEl.textContent = JSON.parse(localStorage.getItem('bb_user')).coins;
+            }
+            function displayPromotedVideos() {
+                videosGrid.innerHTML = ''; 
+                if (allVideos.length > 0) {
+                    noVideosMsg.style.display = 'none';
+                    allVideos.forEach(video => {
+                        const videoCard = `
+                            <div class="glass-card rounded-lg overflow-hidden group">
+                                <a href="https://www.youtube.com/watch?v=${video.youtubeId}" target="_blank" class="block overflow-hidden">
+                                    <img src="https://i.ytimg.com/vi/${video.youtubeId}/mqdefault.jpg" alt="Video thumbnail" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                                </a>
+                                <div class="p-4">
+                                    <p class="text-sm text-gray-400 truncate">Uploaded by: ${video.uploaderId}</p>
+                                </div>
+                            </div>`;
+                        videosGrid.insertAdjacentHTML('beforeend', videoCard);
+                    });
+                } else {
+                    noVideosMsg.style.display = 'block';
                 }
-                return userId;
             }
-
-            const currentUserId = getOrCreateUserId();
-            coinBalanceEl.textContent = localStorage.getItem('userCoins') || '0';
-
-            // --- VIDEO DISPLAY LOGIC for localStorage ---
-            const allPromotedVideos = JSON.parse(localStorage.getItem('promotedVideos')) || [];
-            const myVideos = allPromotedVideos.filter(video => video.uploaderId === currentUserId);
-
-            if (myVideos.length === 0) {
-                noVideosMessage.classList.remove('hidden');
-            } else {
-                myVideosList.innerHTML = '';
-                myVideos.forEach(videoData => {
-                    const videoId = getYouTubeVideoId(videoData.url);
-                    if (videoId) {
-                        myVideosList.innerHTML += `
-                            <a href="${videoData.url}" target="_blank" class="flex items-center space-x-4 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-300">
-                                <img src="https://i3.ytimg.com/vi/${videoId}/default.jpg" class="w-24 h-16 object-cover rounded-md flex-shrink-0" alt="Video Thumbnail">
-                                <p class="text-sm text-gray-800 truncate">${videoData.url}</p>
-                            </a>`;
-                    }
-                });
-            }
+            updateCoinDisplay();
+            displayPromotedVideos();
         });
-
-        function getYouTubeVideoId(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
     </script>
+
 </body>
 </html>
