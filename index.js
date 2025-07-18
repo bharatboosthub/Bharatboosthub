@@ -1,38 +1,67 @@
-// Import the Express library to create a server
+// Load environment variables from .env file
+require('dotenv').config();
+
 const express = require('express');
-// Import the 'cors' library to allow our frontend to talk to our backend
 const cors = require('cors');
+// Import the MongoDB client
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
-// Create an instance of an Express application
 const app = express();
-
-// Tell our app to use the cors middleware
 app.use(cors());
-// Tell our app to understand JSON in request bodies
 app.use(express.json());
 
-// --- IN-MEMORY DATABASE (A simple array to store data) ---
-let videos = [
-    { id: 'vid_dummy_1', youtubeId: 'BBJa32lCaaY', uploaderId: 'user_dummy_alpha' },
-    { id: 'vid_dummy_2', youtubeId: 'okp_kt_zw4w', uploaderId: 'user_dummy_beta' },
-];
+// --- DATABASE CONNECTION ---
+// Get the database URL from the .env file
+const dbUrl = process.env.DATABASE_URL;
 
-// --- API ENDPOINTS (The URLs our frontend will call) ---
+if (!dbUrl) {
+    console.error("Error: DATABASE_URL is not defined. Make sure you have a .env file with the connection string.");
+    process.exit(1);
+}
 
-// --- NEW "WELCOME MAT" ROUTE ---
-// This tells the server what to do when someone visits the main root URL
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(dbUrl, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
+
+let db; // Variable to hold the database connection
+
+// Connect to the database when the server starts
+async function connectToDb() {
+    try {
+        await client.connect();
+        // Use a database named "bharatBoostHub" and a collection named "videos"
+        db = client.db("bharatBoostHub"); 
+        console.log("Successfully connected to MongoDB Atlas!");
+    } catch (err) {
+        console.error("Failed to connect to MongoDB", err);
+        process.exit(1); // Exit if we can't connect
+    }
+}
+
+// --- API ENDPOINTS ---
+
 app.get('/', (req, res) => {
-    res.send('Welcome to the Bharat Boost Hub API! The server is running correctly. Use the /api/videos endpoint to get data.');
+    res.send('Welcome to the Bharat Boost Hub API! The server is connected to the database.');
 });
 
-
-// 1. An endpoint to get the list of all videos
-app.get('/api/videos', (req, res) => {
-    res.json(videos);
+// Get videos from the database
+app.get('/api/videos', async (req, res) => {
+    try {
+        const videosCollection = db.collection('videos');
+        const videos = await videosCollection.find({}).toArray();
+        res.json(videos);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to fetch videos", error: err.message });
+    }
 });
 
-// 2. An endpoint to upload (add) a new video
-app.post('/api/videos', (req, res) => {
+// Add a new video to the database
+app.post('/api/videos', async (req, res) => {
     const { youtubeId, uploaderId } = req.body;
 
     if (!youtubeId || !uploaderId) {
@@ -40,18 +69,26 @@ app.post('/api/videos', (req, res) => {
     }
 
     const newVideo = {
-        id: `vid_${Date.now()}`,
+        _id: `vid_${Date.now()}`, // Use a custom ID
         youtubeId: youtubeId,
-        uploaderId: uploaderId
+        uploaderId: uploaderId,
+        createdAt: new Date(),
     };
-
-    videos.push(newVideo);
-    res.status(201).json(newVideo);
+    
+    try {
+        const videosCollection = db.collection('videos');
+        const result = await videosCollection.insertOne(newVideo);
+        res.status(201).json(result);
+    } catch (err) {
+        res.status(500).json({ message: "Failed to add video", error: err.message });
+    }
 });
 
-// Define a port for our server to listen on
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-// Export the app for Vercel/Render's serverless environment
-module.exports = app;
+// Start the server only after the database is connected
+connectToDb().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+});
