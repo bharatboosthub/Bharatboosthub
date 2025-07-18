@@ -1,15 +1,15 @@
 // Load environment variables from .env file
 require('dotenv').config();
 
-const express = 'express';
-const cors = 'cors';
+// CORRECTED: Use require() to load the modules
+const express = require('express');
+const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const app = express();
 
 // --- TEMPORARY CORS FIX ---
-// This will allow requests from ANY origin.
-// This is for testing only.
+// This will allow requests from ANY origin for testing.
 app.use(cors()); 
 
 // We still need this to read the data from the upload form
