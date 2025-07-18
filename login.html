@@ -39,29 +39,35 @@
 </head>
 <body class="antialiased">
 
-    <div class="flex flex-col items-center justify-center min-h-screen px-4">
+    <div class="flex flex-col items-center justify-center min-h-screen px-4 py-8">
         
         <!-- Logo Header -->
         <div class="text-center mb-8">
-            <div class="inline-flex items-center mb-4">
+            <a href="index.html" class="inline-flex items-center mb-4 no-underline" title="Back to Home">
                 <div class="logo-circle">BB</div>
                 <h1 class="text-2xl font-bold text-white">Bharat Boost Hub</h1>
-            </div>
+            </a>
         </div>
 
         <!-- Login View -->
         <div id="login-view" class="view active w-full max-w-md">
             <div class="text-center mb-8">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white">Welcome Back!</h2>
-                <p class="text-gray-400">Sign in to continue.</p>
+                <p class="text-gray-400">Sign in to continue your journey.</p>
             </div>
             <div class="glass-card p-8 rounded-xl shadow-2xl">
                 <form id="login-form">
-                    <div class="mb-4"><label for="login-email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label><input type="email" id="login-email" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white"></div>
-                    <div class="mb-6"><label for="login-password" class="block text-sm font-medium text-gray-300 mb-2">Password</label><input type="password" id="login-password" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white"></div>
+                    <div class="mb-4">
+                        <label for="login-email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+                        <input type="email" id="login-email" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white transition">
+                    </div>
+                    <div class="mb-6">
+                        <label for="login-password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                        <input type="password" id="login-password" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white transition">
+                    </div>
                     <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">Sign In</button>
                 </form>
-                <p id="login-feedback" class="text-center text-sm mt-4 h-5"></p>
+                <p id="login-feedback" class="text-center text-sm mt-4 h-5 text-red-400"></p>
                 <p class="text-center text-sm text-gray-400 mt-6">Don't have an account? <a href="#" id="show-signup" class="font-medium text-red-500 hover:text-red-400">Sign Up</a></p>
             </div>
         </div>
@@ -69,43 +75,51 @@
         <!-- Sign Up View -->
         <div id="signup-view" class="view w-full max-w-md">
             <div class="text-center mb-8">
-                 <h2 class="text-3xl md:text-4xl font-extrabold text-white">Create Your Account</h2>
-                 <p class="text-gray-400">Let's get you started.</p>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white">Create Your Account</h2>
+                <p class="text-gray-400">Let's get you started.</p>
             </div>
             <div class="glass-card p-8 rounded-xl shadow-2xl">
                 <form id="signup-form">
-                    <div class="mb-4"><label for="signup-email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label><input type="email" id="signup-email" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white"></div>
-                    <div class="mb-6"><label for="signup-password" class="block text-sm font-medium text-gray-300 mb-2">Password</label><input type="password" id="signup-password" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white"></div>
+                     <div class="mb-4">
+                        <label for="signup-name" class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                        <input type="text" id="signup-name" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white transition">
+                    </div>
+                    <div class="mb-4">
+                        <label for="signup-email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+                        <input type="email" id="signup-email" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white transition">
+                    </div>
+                    <div class="mb-6">
+                        <label for="signup-password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                        <input type="password" id="signup-password" required class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 bg-gray-800 text-white transition">
+                    </div>
                     <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition-colors">Create Account</button>
                 </form>
-                <p id="signup-feedback" class="text-center text-sm mt-4 h-5"></p>
+                <p id="signup-feedback" class="text-center text-sm mt-4 h-5 text-red-400"></p>
                 <p class="text-center text-sm text-gray-400 mt-6">Already have an account? <a href="#" id="show-login" class="font-medium text-red-500 hover:text-red-400">Sign In</a></p>
             </div>
         </div>
     </div>
 
+    <!-- Firebase and page logic is now self-contained in this file -->
     <script type="module">
-        // Your project's Firebase configuration
+        // Your project's Firebase configuration from the main firebase.js file
         const firebaseConfig = {
-            apiKey: "AIzaSyBOnW5Mv5YYquR1I9_Nn1ViprMVV0OubbM",
+            apiKey: "AlzaSyBOnW5Mv5YYquR119_Nn1ViprMVV00ubbM",
             authDomain: "bharat-boost-hub.firebaseapp.com",
             projectId: "bharat-boost-hub",
             storageBucket: "bharat-boost-hub.appspot.com",
             messagingSenderId: "1047323522415",
-            appId: "1:1047323522415:web:4972c0bce15ae7253de49a"
+            appId: "1:1047323522415:web:e6c5a0c8d8a7b9c6f0a1b2"
         };
 
         // Import Firebase services
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        // **FIX**: Added Firestore imports to create user profiles
-        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        // **FIX**: Initialized Firestore
         const db = getFirestore(app);
-        const appId = firebaseConfig.appId;
 
         // --- View Switching Logic ---
         const loginView = document.getElementById('login-view');
@@ -121,49 +135,67 @@
         showSignupBtn.addEventListener('click', (e) => { e.preventDefault(); showView(signupView); });
         showLoginBtn.addEventListener('click', (e) => { e.preventDefault(); showView(loginView); });
 
-        // **FIX**: The onAuthStateChanged listener that caused auto-login has been removed.
-        // The page will now always show the login form on load.
+        // Redirect if already logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // To prevent redirect loops, only redirect if we are on the login page
+                if (window.location.pathname.endsWith('login.html')) {
+                    window.location.href = 'dashboard.html';
+                }
+            }
+        });
 
-        // --- Sign-Up Logic (Direct Creation) ---
+        // --- Sign-Up Logic ---
         const signupForm = document.getElementById('signup-form');
         const signupFeedback = document.getElementById('signup-feedback');
         
         signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            const name = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
             const password = document.getElementById('signup-password').value;
             
             signupFeedback.textContent = '';
-            signupFeedback.classList.remove('text-red-500', 'text-green-500');
+            signupFeedback.classList.remove('text-red-400', 'text-green-400');
+
+            if (name.trim() === '') {
+                signupFeedback.textContent = 'Please enter your full name.';
+                signupFeedback.classList.add('text-red-400');
+                return;
+            }
 
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // **FIX**: Added logic to create a user document in Firestore
+                    // Create a user document in Firestore matching the site's structure
                     const user = userCredential.user;
-                    const userRef = doc(db, `artifacts/${appId}/users/${user.uid}`);
+                    const userRef = doc(db, "users", user.uid); // Use the main 'users' collection
                     return setDoc(userRef, {
+                        uid: user.uid,
+                        displayName: name, // Use the name from the form
                         email: user.email,
-                        coins: 5, // Give new users a starting bonus
+                        photoURL: null, // No photo URL with email signup
+                        coinBalance: 100, // Welcome gift of 100 coins
                         createdAt: serverTimestamp()
                     });
                 })
                 .then(() => {
-                    // On success, show message and redirect to the dashboard page.
-                    signupFeedback.textContent = 'Account created successfully! Redirecting...';
-                    signupFeedback.classList.add('text-green-500');
+                    signupFeedback.textContent = 'Account created! Redirecting...';
+                    signupFeedback.classList.add('text-green-400');
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html'; // Redirect to dashboard
-                    }, 1000); // Wait 1 second before redirecting
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
                 })
                 .catch((error) => {
                     let msg = 'An error occurred. Please try again.';
                     if (error.code === 'auth/email-already-in-use') {
-                        msg = 'This email is already in use.';
+                        msg = 'This email is already registered.';
                     } else if (error.code === 'auth/weak-password') {
-                        msg = 'Password must be at least 6 characters.';
+                        msg = 'Password must be at least 6 characters long.';
+                    } else if (error.code === 'auth/invalid-email') {
+                        msg = 'Please enter a valid email address.';
                     }
                     signupFeedback.textContent = msg;
-                    signupFeedback.classList.add('text-red-500');
+                    signupFeedback.classList.add('text-red-400');
                 });
         });
 
@@ -177,20 +209,19 @@
             const password = document.getElementById('login-password').value;
             
             loginFeedback.textContent = '';
-            loginFeedback.classList.remove('text-red-500', 'text-green-500');
+            loginFeedback.classList.remove('text-red-400', 'text-green-400');
 
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // On success, show message and redirect to the dashboard page.
                     loginFeedback.textContent = 'Login successful! Redirecting...';
-                    loginFeedback.classList.add('text-green-500');
+                    loginFeedback.classList.add('text-green-400');
                     setTimeout(() => {
-                        window.location.href = './dashboard.html'; // Redirect to dashboard
-                    }, 1000); // Wait 1 second before redirecting
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
                 })
                 .catch((error) => {
-                    loginFeedback.textContent = 'Invalid email or password.';
-                    loginFeedback.classList.add('text-red-500');
+                    loginFeedback.textContent = 'Invalid email or password. Please try again.';
+                    loginFeedback.classList.add('text-red-400');
                 });
         });
     </script>
