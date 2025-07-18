@@ -100,11 +100,124 @@
         </div>
     </div>
 
-    <!-- This page now uses the central script files -->
-    <script type="module" src="js/firebase.js"></script>
-    <script type="module" src="js/main.js"></script>
+    <!-- All JavaScript logic is now inside this file -->
+    <script type="module">
+        // Your project's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBOnW5Mv5YYquR1I9_Nn1ViprMVV0OubbM",
+            authDomain: "bharat-boost-hub.firebaseapp.com",
+            projectId: "bharat-boost-hub",
+            storageBucket: "bharat-boost-hub.appspot.com",
+            messagingSenderId: "1047323522415",
+            appId: "1:1047323522415:web:4972c0bce15ae7253de49a"
+        };
+
+        // Import Firebase services
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- View Switching Logic ---
+        const loginView = document.getElementById('login-view');
+        const signupView = document.getElementById('signup-view');
+        const showSignupBtn = document.getElementById('show-signup');
+        const showLoginBtn = document.getElementById('show-login');
+
+        function showView(view) {
+            loginView.classList.toggle('active', view === loginView);
+            signupView.classList.toggle('active', view === signupView);
+        }
+
+        showSignupBtn.addEventListener('click', (e) => { e.preventDefault(); showView(signupView); });
+        showLoginBtn.addEventListener('click', (e) => { e.preventDefault(); showView(loginView); });
+
+        // --- Redirect if already logged in ---
+        // This listener checks the initial state. If a user is already logged in,
+        // it sends them to the dashboard immediately.
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.replace('dashboard.html');
+            }
+        });
+
+        // --- Sign-Up Logic ---
+        const signupForm = document.getElementById('signup-form');
+        const signupFeedback = document.getElementById('signup-feedback');
+        
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            signupFeedback.textContent = 'Creating account...';
+            signupFeedback.classList.remove('text-red-400', 'text-green-400');
+
+            if (name.trim() === '') {
+                signupFeedback.textContent = 'Please enter your full name.';
+                return;
+            }
+
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    const userRef = doc(db, "users", user.uid);
+                    // Create the user document in Firestore
+                    return setDoc(userRef, {
+                        uid: user.uid,
+                        displayName: name,
+                        email: user.email,
+                        photoURL: null,
+                        coinBalance: 100,
+                        createdAt: serverTimestamp()
+                    });
+                })
+                .then(() => {
+                    // **THE FIX**: Force redirect immediately after profile creation.
+                    // Using .replace() prevents the user from clicking "back" to the login page.
+                    window.location.replace('dashboard.html');
+                })
+                .catch((error) => {
+                    let msg = 'An error occurred. Please try again.';
+                    if (error.code === 'auth/email-already-in-use') {
+                        msg = 'This email is already registered.';
+                    } else if (error.code === 'auth/weak-password') {
+                        msg = 'Password must be at least 6 characters.';
+                    }
+                    signupFeedback.textContent = msg;
+                    signupFeedback.classList.add('text-red-400');
+                });
+        });
+
+        // --- Login Logic ---
+        const loginForm = document.getElementById('login-form');
+        const loginFeedback = document.getElementById('login-feedback');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            loginFeedback.textContent = 'Signing in...';
+            loginFeedback.classList.remove('text-red-400', 'text-green-400');
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // **THE FIX**: Force redirect immediately on successful login.
+                    window.location.replace('dashboard.html');
+                })
+                .catch((error) => {
+                    loginFeedback.textContent = 'Invalid email or password.';
+                    loginFeedback.classList.add('text-red-400');
+                });
+        });
+    </script>
 </body>
 </html>
 ```
 
-Once you have saved this file, let me know, and I will provide the next corrected file, **`firebase.js`
+This version is now the most reliable solution. It is completely independent and directly controls the redirect, which will solve the probl
