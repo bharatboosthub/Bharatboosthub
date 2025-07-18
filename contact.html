@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Bharat Boost Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-bold text-red-600">BharatBoostHub</a>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="contact.html" class="nav-link text-red-600 font-semibold">Contact</a>
+                <a href="login.html" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300">Login / Get Started</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-800 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4">
+            <a href="index.html" class="block py-2 nav-link">Home</a>
+            <a href="about.html" class="block py-2 nav-link">About</a>
+            <a href="contact.html" class="block py-2 text-red-600 font-semibold">Contact</a>
+            <a href="login.html" class="block mt-2 bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300 text-center">Login / Get Started</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12 md:py-20">
+        <div class="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-2xl shadow-xl">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 text-center mb-4">Get In Touch</h1>
+            <p class="text-center text-gray-500 mb-10">We'd love to hear from you! Whether you have a question, feedback, or need assistance, feel free to reach out.</p>
+
+            <div class="space-y-8">
+                <!-- Email Contact -->
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="bg-red-100 p-3 rounded-full">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800">Email Us</h2>
+                        <p class="text-gray-600">For general inquiries, support, or feedback, please send an email to our admin team. We aim to respond within 24-48 hours.</p>
+                        <a href="mailto:bharatbhushan2059@gmail.com" class="text-red-600 font-bold hover:underline mt-2 inline-block">bharatbhushan2059@gmail.com</a>
+                    </div>
+                </div>
+
+                <!-- Social Media Contact -->
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="bg-red-100 p-3 rounded-full">
+                           <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.55 5.55a8 8 0 1 1-1.414 1.414l-1.414-1.414a8 8 0 0 1 2.828 0zM12 12a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"></path></svg>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800">Follow Us</h2>
+                        <p class="text-gray-600">Stay updated and connect with our community on our official YouTube channel.</p>
+                        <a href="https://youtube.com/@bharatboosthub" target="_blank" rel="noopener noreferrer" class="text-red-600 font-bold hover:underline mt-2 inline-block">@bharatboosthub on YouTube</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="md:flex justify-between items-center text-center md:text-left">
+                <div>
+                    <h3 class="text-xl font-bold">BharatBoostHub</h3>
+                    <p class="text-gray-400">Community-based promotion for YouTube creators.</p>
+                </div>
+                <div class="mt-6 md:mt-0">
+                    <a href="about.html" class="px-3 hover:text-red-500 transition">About</a>
+                    <a href="terms.html" class="px-3 hover:text-red-500 transition">Terms</a>
+                    <a href="privacy.html" class="px-3 hover:text-red-500 transition">Privacy</a>
+                    <a href="disclaimer.html" class="px-3 hover:text-red-500 transition">Disclaimer</a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-6 pt-6 text-center text-gray-500">
+                <p>&copy; 2024 Bharat Boost Hub. All Rights Reserved.</p>
+                <p class="text-xs mt-2">This platform is not affiliated with or endorsed by YouTube or Google.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
