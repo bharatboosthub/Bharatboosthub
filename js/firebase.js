@@ -1,18 +1,17 @@
 /*
  * Bharat Boost Hub - Firebase Core Setup & Authentication
  * /js/firebase.js
- * Last Updated: July 18, 2025
+ * Last Updated: July 18, 2025 - Simplified Redirect Logic
  */
 
 // Import necessary functions from the Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
 import { 
     getAuth, 
-    onAuthStateChanged, 
+    // **REMOVED onAuthStateChanged to prevent redirect conflicts
     GoogleAuthProvider, 
     signInWithPopup, 
     signOut,
-    // Added functions for email/password auth
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
@@ -75,46 +74,42 @@ const handleGoogleLogin = async () => {
                 createdAt: serverTimestamp()
             });
         }
-        // The onAuthStateChanged listener will handle the redirect automatically
+        // Explicit redirect
+        window.location.href = 'dashboard.html';
     } catch (error) {
         console.error("Google Login Error:", error);
-        // You can add a user-facing error message here if needed
     }
 };
 
 const handleLogout = () => {
-    signOut(auth).catch((error) => {
+    signOut(auth)
+    .then(() => {
+        // Explicit redirect on logout
+        window.location.href = 'login.html';
+    })
+    .catch((error) => {
         console.error("Logout Error:", error);
     });
 };
 
 const getCurrentUserData = async () => {
     const user = auth.currentUser;
-    if (!user) return null;
+    if (!user) {
+        // If there's no user on a protected page, redirect to login
+        const protectedPages = ['dashboard.html', 'upload.html', 'watch.html', 'coins.html'];
+        if (protectedPages.includes(window.location.pathname.split('/').pop())) {
+             window.location.href = 'login.html';
+        }
+        return null;
+    }
     const userRef = doc(db, "users", user.uid);
     const userSnap = await getDoc(userRef);
     return userSnap.exists() ? { id: userSnap.id, ...userSnap.data() } : null;
 };
 
 
-// --- This is now the ONLY auth state listener for the entire site ---
-// It handles all redirects, preventing loops.
-onAuthStateChanged(auth, (user) => {
-    const currentPage = window.location.pathname.split('/').pop();
-    const protectedPages = ['dashboard.html', 'upload.html', 'watch.html', 'coins.html'];
-    
-    if (user) {
-        // If user is logged in and tries to visit login.html, redirect them to the dashboard.
-        if (currentPage === 'login.html') {
-            window.location.href = 'dashboard.html';
-        }
-    } else {
-        // If user is not logged in and tries to visit a protected page, redirect them to login.
-        if (protectedPages.includes(currentPage)) {
-            window.location.href = 'login.html';
-        }
-    }
-});
+// **FIXED**: The onAuthStateChanged listener has been completely removed.
+// All redirects are now handled explicitly in main.js or the functions above.
 
 
 // Export all necessary functions to be used by main.js
@@ -143,4 +138,11 @@ export {
 };
 ```
 
-After saving this file, please let me know, and I will provide the final corrected file, **`main.js`
+**What this change does:**
+
+* It **removes the conflicting `onAuthStateChanged` listener** entirely.
+* The only code that can now redirect you is the `window.location.href = 'dashboard.html';` line inside the `main.js` file, which runs *only* after a successful login or sign-up.
+* I also added a redirect inside the `handleLogout` function to ensure logging out works correctly.
+* I added a check inside `getCurrentUserData` to protect your pages.
+
+This approach is simpler and removes the possibility of a race condition. Please update your `js/firebase.js` file with this code, and try one more time. This should resolve the issue for go
