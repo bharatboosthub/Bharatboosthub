@@ -1,7 +1,7 @@
 /*
  * Bharat Boost Hub - Main Application Logic
  * /js/main.js
- * Last Updated: July 18, 2025
+ * Last Updated: July 18, 2025 - Redirect Fix
  */
 
 // Import all necessary functions and services from firebase.js
@@ -12,7 +12,6 @@ import {
     handleGoogleLogin,
     handleLogout,
     getCurrentUserData,
-    // Import email/password functions
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     doc,
@@ -46,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
             break;
         case 'index.html':
         case '':
-            // No specific JS needed for index page
             break;
         case 'dashboard.html':
             initializeDashboardPage();
@@ -61,22 +59,18 @@ document.addEventListener('DOMContentLoaded', () => {
             initializeCoinsPage();
             break;
     }
-    // This runs on all pages to update header info if available
     updateUserInfoInHeader();
 });
 
 // --- Initialization Functions for Each Page ---
 
 function initializeCommonEventListeners() {
-    // This button might not exist on the new login page, but the check is harmless
     const googleLoginBtn = document.getElementById('google-login-btn');
     if (googleLoginBtn) googleLoginBtn.addEventListener('click', handleGoogleLogin);
     
-    // This button exists on all pages except login/index
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
 
-    // For mobile menu on non-dashboard pages
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     if (mobileMenuButton) {
         mobileMenuButton.addEventListener('click', () => {
@@ -85,7 +79,6 @@ function initializeCommonEventListeners() {
     }
 }
 
-// All login page logic is now handled here, controlled by the central auth listener in firebase.js
 function initializeLoginPage() {
     const loginView = document.getElementById('login-view');
     const signupView = document.getElementById('signup-view');
@@ -94,7 +87,6 @@ function initializeLoginPage() {
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
 
-    // View switching logic
     if (showSignupBtn) showSignupBtn.addEventListener('click', (e) => { e.preventDefault(); showView(signupView); });
     if (showLoginBtn) showLoginBtn.addEventListener('click', (e) => { e.preventDefault(); showView(loginView); });
     function showView(view) {
@@ -102,7 +94,6 @@ function initializeLoginPage() {
         signupView.classList.toggle('active', view === signupView);
     }
 
-    // Signup form submission
     if (signupForm) {
         signupForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -111,7 +102,7 @@ function initializeLoginPage() {
             const password = document.getElementById('signup-password').value;
             const feedbackEl = document.getElementById('signup-feedback');
             
-            feedbackEl.textContent = '';
+            feedbackEl.textContent = 'Creating account...';
             if (name.trim() === '') {
                 feedbackEl.textContent = 'Please enter your full name.';
                 return;
@@ -121,18 +112,18 @@ function initializeLoginPage() {
                 .then(userCredential => {
                     const user = userCredential.user;
                     const userRef = doc(db, "users", user.uid);
-                    // Create the user profile in Firestore
                     return setDoc(userRef, {
                         uid: user.uid,
                         displayName: name,
                         email: user.email,
-                        photoURL: null, // No photo for email signups
+                        photoURL: null,
                         coinBalance: 100,
                         createdAt: serverTimestamp()
                     });
                 })
                 .then(() => {
-                    // Success is handled by the global onAuthStateChanged listener which will redirect to dashboard
+                    // **FIXED**: Explicitly redirect after creating the user profile.
+                    window.location.href = 'dashboard.html';
                 })
                 .catch(error => {
                     let msg = 'An error occurred. Please try again.';
@@ -144,18 +135,18 @@ function initializeLoginPage() {
         });
     }
 
-    // Login form submission
     if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             const feedbackEl = document.getElementById('login-feedback');
-            feedbackEl.textContent = '';
+            feedbackEl.textContent = 'Signing in...';
 
             signInWithEmailAndPassword(auth, email, password)
                 .then(userCredential => {
-                    // Success is handled by the global onAuthStateChanged listener which will redirect to dashboard
+                    // **FIXED**: Explicitly redirect on successful login.
+                    window.location.href = 'dashboard.html';
                 })
                 .catch(error => {
                     feedbackEl.textContent = 'Invalid email or password.';
@@ -169,7 +160,7 @@ async function initializeDashboardPage() {
     if (user) {
         const displayNameEl = document.getElementById('user-displayName');
         const coinBalanceEl = document.getElementById('user-coinBalance');
-        if (displayNameEl) displayNameEl.textContent = user.displayName.split(' ')[0]; // Show first name
+        if (displayNameEl) displayNameEl.textContent = user.displayName.split(' ')[0];
         if (coinBalanceEl) coinBalanceEl.textContent = user.coinBalance;
     }
 }
@@ -193,7 +184,6 @@ function initializeWatchPage() {
     if(closeModalBtn) {
         closeModalBtn.addEventListener('click', () => {
             document.getElementById('watch-modal').classList.add('hidden');
-            // Stop the YouTube video if it's playing
             const playerDiv = document.getElementById('youtube-player');
             if(playerDiv) playerDiv.innerHTML = '';
         });
@@ -205,8 +195,7 @@ function initializeCoinsPage() {
     loadEarningsHistory();
 }
 
-
-// --- Feature-Specific Functions ---
+// --- The rest of the functions remain unchanged ---
 
 async function updateUserInfoInHeader() {
     const coinBalanceEl = document.getElementById('user-coinBalance');
