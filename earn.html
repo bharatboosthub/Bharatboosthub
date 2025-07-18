@@ -17,9 +17,8 @@
 </head>
 <body class="antialiased">
 
-    <!-- Header -->
+    <!-- Header (Fully Responsive) -->
     <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-700/50">
-        <!-- Responsive Adjustment: Consistent with dashboard -->
         <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
             <a href="dashboard.html" class="flex items-center space-x-3">
                 <div class="bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg flex-shrink-0">BB</div>
@@ -36,7 +35,6 @@
         </nav>
     </header>
 
-    <!-- Responsive Adjustment: Adjusted padding and text sizes -->
     <main class="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div id="video-display-container" class="max-w-4xl mx-auto">
             <h1 class="text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 text-center">Watch a Video to Earn Coins</h1>
@@ -52,7 +50,7 @@
         </div>
 
         <div id="claim-section" class="max-w-2xl mx-auto bg-gray-800 p-6 sm:p-8 rounded-xl shadow-lg mt-8 hidden">
-            <h2 class="text-xl sm:text-2xl font-bold text-white mb-4">Claim Your Reward</h2>
+             <h2 class="text-xl sm:text-2xl font-bold text-white mb-4">Claim Your Reward</h2>
             <p class="text-gray-400 mb-6 text-sm sm:text-base">Confirm your actions and upload proof to receive coins.</p>
             
             <div class="space-y-4">
@@ -76,7 +74,6 @@
     </main>
 
     <script>
-        // JavaScript functionality remains the same
         document.addEventListener('DOMContentLoaded', () => {
             const coinBalanceEl = document.getElementById('coin-balance');
             const videoPlayerSection = document.getElementById('video-player-section');
@@ -86,33 +83,58 @@
             const claimSection = document.getElementById('claim-section');
             const claimRewardBtn = document.getElementById('claim-reward-btn');
             const claimFeedback = document.getElementById('claim-feedback');
+            
             let timerInterval, videoToWatch = null;
             let user = JSON.parse(localStorage.getItem('bb_user'));
             if (!user) { window.location.href = 'login.html'; return; }
+
+            // --- NEW: Function to add dummy data for testing ---
+            function seedInitialData() {
+                // This 'seeded' flag ensures we only add dummy data ONCE.
+                if (localStorage.getItem('bb_videos_seeded')) {
+                    return;
+                }
+
+                const dummyVideos = [
+                    { id: 'vid_dummy_1', youtubeId: 'BBJa32lCaaY', uploaderId: 'user_dummy_alpha' }, // MrBeast Video
+                    { id: 'vid_dummy_2', youtubeId: 'okp_kt_zw4w', uploaderId: 'user_dummy_beta' },   // MKBHD Video
+                    { id: 'vid_dummy_3', youtubeId: 'R2E1b6iQ6ks', uploaderId: 'user_dummy_gamma' }  // National Geographic Video
+                ];
+
+                localStorage.setItem('bb_videos', JSON.stringify(dummyVideos));
+                localStorage.setItem('bb_videos_seeded', 'true'); // Set the flag
+            }
+
             function updateCoinDisplay() {
                 coinBalanceEl.textContent = JSON.parse(localStorage.getItem('bb_user')).coins;
             }
+
             function loadVideoToWatch() {
-                const watchableVideos = (JSON.parse(localStorage.getItem('bb_videos')) || []).filter(v => v.uploaderId !== user.id);
+                let allVideos = JSON.parse(localStorage.getItem('bb_videos')) || [];
+                // This filter is the crucial part. It removes videos uploaded by the current user.
+                const watchableVideos = allVideos.filter(v => v.uploaderId !== user.id);
+
                 if (watchableVideos.length > 0) {
                     noVideosMessage.classList.add('hidden');
                     videoToWatch = watchableVideos[Math.floor(Math.random() * watchableVideos.length)];
+                    
                     videoPlayerSection.innerHTML = `
                         <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer group" id="watch-video-btn">
-                            <!-- Responsive Adjustment: Image height changes on screen size -->
                             <img src="https://i.ytimg.com/vi/${videoToWatch.youtubeId}/hqdefault.jpg" alt="Video thumbnail" class="w-full h-56 sm:h-64 md:h-80 object-cover group-hover:opacity-80 transition-opacity">
                             <div class="p-4 text-center"><h3 class="text-lg sm:text-xl font-bold text-white">Click Here to Watch on YouTube</h3></div>
                         </div>`;
                     document.getElementById('watch-video-btn').addEventListener('click', startWatching);
                 } else {
                     noVideosMessage.classList.remove('hidden');
+                    noVideosMessage.textContent = "No other user videos are available. Upload one or check back later!";
                 }
             }
+            
             function startWatching() {
                 window.open(`https://www.youtube.com/watch?v=${videoToWatch.youtubeId}`, '_blank');
                 videoPlayerSection.classList.add('hidden');
                 timerSection.classList.remove('hidden');
-                let timeLeft = 180;
+                let timeLeft = 180; // 3 minutes
                 timerInterval = setInterval(() => {
                     timeLeft--;
                     timerDisplay.textContent = `${Math.floor(timeLeft/60).toString().padStart(2,'0')}:${(timeLeft%60).toString().padStart(2,'0')}`;
@@ -123,6 +145,7 @@
                     }
                 }, 1000);
             }
+
             claimRewardBtn.addEventListener('click', () => {
                 if (!document.getElementById('screenshot-upload').files[0]) {
                     claimFeedback.textContent = "Please upload a screenshot.";
@@ -140,6 +163,9 @@
                 claimFeedback.className = "text-green-400 text-center mt-4 font-medium h-6";
                 setTimeout(() => window.location.href = 'dashboard.html', 2000);
             });
+            
+            // --- Run the setup ---
+            seedInitialData(); // This will add dummy data if it doesn't exist
             updateCoinDisplay();
             loadVideoToWatch();
         });
