@@ -1,0 +1,56 @@
+<!-- FILE: register.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - BharatBoostHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex items-center justify-center py-12 p-4">
+        <div class="max-w-md w-full bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+            <div class="text-center mb-8">
+                <a href="index.html" class="text-3xl font-bold text-indigo-600">BharatBoostHub</a>
+                <p class="text-gray-500 mt-2">Join our community of creators!</p>
+            </div>
+            <form id="register-form" class="space-y-6">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input type="email" id="email" name="email" required class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="you@example.com">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" name="password" required minlength="6" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Minimum 6 characters">
+                </div>
+                 <div>
+                    <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required minlength="6" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" placeholder="Re-enter your password">
+                </div>
+                <div>
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+            <p id="error-message" class="mt-4 text-center text-red-500 text-sm h-4"></p>
+            <p class="mt-6 text-center text-sm text-gray-600">
+                Already have an account? <a href="login.html" class="font-medium text-indigo-600 hover:text-indigo-500">Login here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- 
+        This script will handle the registration form submission.
+        It will call the register function from `js/auth.js` (which we will create later).
+    -->
+    <script type="module" src="js/auth.js"></script>
+</body>
+</html>
