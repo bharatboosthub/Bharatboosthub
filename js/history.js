@@ -1,5 +1,5 @@
 // FILE: js/history.js
-// FINAL FIX: This version uses a more reliable query to prevent loading errors.
+// FINAL FIX: This version now uses a secure database function (RPC) to fetch history.
 
 import { supabase } from './supabase.js';
 import { protectPage } from './auth.js';
@@ -13,27 +13,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const noHistoryEl = document.getElementById('no-history');
 
     const fetchHistory = async () => {
-        // --- FIXED: Simplified the database query to be more reliable ---
-        // Instead of counting views in the same query, we fetch the video data directly.
-        // This is much less likely to fail due to permission issues.
+        // --- NEW: Call the database function using .rpc() ---
+        // This is a single, simple, and secure call.
         const { data: videos, error } = await supabase
-            .from('videos')
-            .select(`
-                id,
-                created_at,
-                video_url,
-                status,
-                title, 
-                thumbnail_url
-            `)
-            .eq('user_id', user.id)
-            .order('created_at', { ascending: false });
+            .rpc('get_user_campaign_history');
 
         if (loaderEl) loaderEl.style.display = 'none';
 
         if (error) {
             console.error('Error fetching history:', error.message);
-            historyTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-red-500">Could not load your campaign history.</td></tr>`;
+            historyTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-red-500">Could not load your campaign history. Please check console for errors.</td></tr>`;
             return;
         }
 
@@ -42,32 +31,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
-        // --- NEW: Fetch all view counts in a separate, efficient query ---
-        const videoIds = videos.map(v => v.id);
-        const { data: viewsData, error: viewsError } = await supabase
-            .from('views')
-            .select('video_id', { count: 'exact' })
-            .in('video_id', videoIds)
-            .eq('status', 'verified'); // Only count verified views
-        
-        if(viewsError) {
-            console.error("Could not fetch view counts:", viewsError.message);
-        }
-
-        // Create a map for easy lookup of view counts
-        const viewCounts = new Map();
-        if(viewsData) {
-            // This part is a bit complex, but it correctly counts views for each video
-            videos.forEach(video => {
-                const count = viewsData.filter(v => v.video_id === video.id).length;
-                viewCounts.set(video.id, count);
-            });
-        }
-
-
         videos.forEach(video => {
             const date = new Date(video.created_at).toLocaleDateString();
-            const viewsCount = viewCounts.get(video.id) || 0; // Get the count from our map
+            // The view count now comes directly from the function's result
+            const viewsCount = video.view_count || 0;
             const watchTime = viewsCount * 3;
 
             const thumbnailUrl = video.thumbnail_url || 'https://placehold.co/120x90/e2e8f0/4a5568?text=No+Preview';
