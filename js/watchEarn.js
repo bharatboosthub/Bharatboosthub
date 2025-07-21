@@ -1,5 +1,5 @@
 // FILE: js/watchEarn.js
-// This version now displays the real video titles and thumbnails fetched from the YouTube API.
+// FIXED: This version now fetches and displays the real video titles and thumbnails.
 
 import { supabase } from './supabase.js';
 import { protectPage } from './auth.js';
