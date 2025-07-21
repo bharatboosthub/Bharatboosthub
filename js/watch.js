@@ -105,9 +105,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const fileName = `${user.id}/${videoId}-${Date.now()}`;
 
         // 1. Upload the screenshot to Supabase Storage
-        // --- FIXED: Using the correct bucket name 'screenshot' ---
         const { error: uploadError } = await supabase.storage
-            .from('screenshot') // Changed from 'screenshots' to 'screenshot'
+            .from('screenshot') // Using the correct bucket name 'screenshot'
             .upload(fileName, file);
 
         if (uploadError) {
@@ -119,9 +118,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // 2. Get the public URL of the uploaded file
-        // --- FIXED: Using the correct bucket name 'screenshot' ---
         const { data: { publicUrl } } = supabase.storage
-            .from('screenshot') // Changed from 'screenshots' to 'screenshot'
+            .from('screenshot') // Using the correct bucket name 'screenshot'
             .getPublicUrl(fileName);
 
         // 3. Create a record in the 'views' table to log the action
@@ -152,12 +150,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (userError) {
             showMessage('Verification pending. We could not fetch your balance to add coins.', true);
         } else {
-            const newBalance = (userData.coin_balance || 0) + 1; // Award 1 coin
+            // --- FIXED: Changed coin award from 1 to 5 ---
+            const newBalance = (userData.coin_balance || 0) + 5; // Award 5 coins
             await supabase.from('users').update({ coin_balance: newBalance }).eq('id', user.id);
             await supabase.from('views').update({ status: 'verified' }).match({ user_id: user.id, video_id: videoId });
         }
 
-        showMessage('Verification successful! 1 coin has been added to your balance.', false);
+        showMessage('Verification successful! 5 coins have been added to your balance.', false);
         
         // Redirect back to the video list after a delay
         setTimeout(() => {
