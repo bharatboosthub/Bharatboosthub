@@ -1,26 +1,19 @@
 // FILE: js/history.js
-// Fetches and displays the user's campaign history.
+// FIXED: This version now fetches and displays the correct title and thumbnail.
 
 import { supabase } from './supabase.js';
 import { protectPage } from './auth.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Ensure user is logged in
     const user = await protectPage();
     if (!user) return;
 
-    // --- ELEMENT SELECTORS ---
     const historyTableBody = document.getElementById('history-table-body');
     const loaderEl = document.getElementById('loader');
     const noHistoryEl = document.getElementById('no-history');
 
-    /**
-     * Fetches the user's video campaigns and their associated view counts.
-     */
     const fetchHistory = async () => {
-        // Fetch videos uploaded by the current user.
-        // We also perform a join-like operation to get the count of views for each video.
-        // Supabase allows fetching related data and counts like this.
+        // --- MODIFIED: The select query now includes 'title' and 'thumbnail_url' ---
         const { data: videos, error } = await supabase
             .from('videos')
             .select(`
@@ -28,57 +21,49 @@ document.addEventListener('DOMContentLoaded', async () => {
                 created_at,
                 video_url,
                 status,
+                title, 
+                thumbnail_url, 
                 views ( count )
             `)
             .eq('user_id', user.id)
-            .order('created_at', { ascending: false }); // Show the newest campaigns first
+            .order('created_at', { ascending: false });
 
-        // Hide the loader once the data is fetched
         if (loaderEl) loaderEl.style.display = 'none';
 
         if (error) {
             console.error('Error fetching history:', error.message);
-            historyTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-red-500">Could not load your campaign history.</td></tr>`;
+            historyTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-red-500">Could not load history.</td></tr>`;
             return;
         }
 
-        // If the user has no videos, show the "no history" message
         if (videos.length === 0) {
             if (noHistoryEl) noHistoryEl.classList.remove('hidden');
             return;
         }
 
-        // --- RENDER HISTORY TABLE ---
         videos.forEach(video => {
             const date = new Date(video.created_at).toLocaleDateString();
-            // The count is nested inside the 'views' array from the query
             const viewsCount = video.views[0]?.count || 0;
-            const watchTime = viewsCount * 3; // 3 minutes per view
+            const watchTime = viewsCount * 3;
 
-            // Extract YouTube video ID for the thumbnail
-            let videoId = '';
-            try {
-                const url = new URL(video.video_url);
-                videoId = url.searchParams.get('v');
-            } catch (e) { /* Fails gracefully if URL is malformed */ }
-            
-            const thumbnailUrl = videoId ? `https://img.youtube.com/vi/${videoId}/default.jpg` : 'https://placehold.co/120x90/e2e8f0/4a5568?text=No+Preview';
+            // --- MODIFIED: Use the real thumbnail and title from the database ---
+            const thumbnailUrl = video.thumbnail_url || 'https://placehold.co/120x90/e2e8f0/4a5568?text=No+Preview';
+            const videoTitle = video.title || video.video_url; // Fallback to URL if title is missing
 
-            // Style the status badge based on its value
             const statusClass = video.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800';
 
-            // Create the HTML for the table row
             const row = `
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-16 w-24">
-                                <img class="h-16 w-24 rounded-md object-cover" src="${thumbnailUrl}" alt="Video thumbnail">
+                                <img class="h-16 w-24 rounded-md object-cover" src="${thumbnailUrl}" alt="Thumbnail for ${videoTitle}">
                             </div>
                             <div class="ml-4">
-                                <div class="text-sm font-medium text-gray-900 truncate max-w-xs">
-                                    <a href="${video.video_url}" target="_blank" class="hover:text-indigo-600" title="${video.video_url}">${video.video_url}</a>
+                                <div class="text-sm font-medium text-gray-900 truncate max-w-xs" title="${videoTitle}">
+                                    ${videoTitle}
                                 </div>
+                                <a href="${video.video_url}" target="_blank" class="text-xs text-indigo-600 hover:underline">Watch on YouTube</a>
                             </div>
                         </div>
                     </td>
@@ -92,11 +77,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${watchTime}</td>
                 </tr>
             `;
-            // Append the new row to the table body
             historyTableBody.innerHTML += row;
         });
     };
 
-    // --- INITIALIZATION ---
     fetchHistory();
 });
