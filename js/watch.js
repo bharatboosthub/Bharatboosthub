@@ -105,8 +105,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const fileName = `${user.id}/${videoId}-${Date.now()}`;
 
         // 1. Upload the screenshot to Supabase Storage
+        // --- FIXED: Using the correct bucket name 'screenshot' ---
         const { error: uploadError } = await supabase.storage
-            .from('screenshots') // The bucket name must match what you created in Supabase
+            .from('screenshot') // Changed from 'screenshots' to 'screenshot'
             .upload(fileName, file);
 
         if (uploadError) {
@@ -118,8 +119,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // 2. Get the public URL of the uploaded file
+        // --- FIXED: Using the correct bucket name 'screenshot' ---
         const { data: { publicUrl } } = supabase.storage
-            .from('screenshots')
+            .from('screenshot') // Changed from 'screenshots' to 'screenshot'
             .getPublicUrl(fileName);
 
         // 3. Create a record in the 'views' table to log the action
@@ -129,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 user_id: user.id,
                 video_id: videoId,
                 screenshot_url: publicUrl,
-                status: 'pending' // In a real app, an admin would verify this
+                status: 'pending'
             }]);
 
         if (viewError) {
@@ -141,7 +143,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // --- AUTO-VERIFICATION & COIN AWARD (for this project) ---
-        // In a production app, this logic would be a secure backend function or manual process.
         const { data: userData, error: userError } = await supabase
             .from('users')
             .select('coin_balance')
@@ -153,7 +154,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             const newBalance = (userData.coin_balance || 0) + 1; // Award 1 coin
             await supabase.from('users').update({ coin_balance: newBalance }).eq('id', user.id);
-            // Mark the view as verified
             await supabase.from('views').update({ status: 'verified' }).match({ user_id: user.id, video_id: videoId });
         }
 
