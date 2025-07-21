@@ -1,0 +1,67 @@
+<!-- FILE: history.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign History - BharatBoostHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="dashboard.html" class="text-2xl font-bold text-indigo-600">BharatBoostHub</a>
+            <div class="flex items-center space-x-4">
+                 <a href="dashboard.html" class="text-gray-600 hover:text-indigo-600">Dashboard</a>
+                <button id="logout-btn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 text-sm font-semibold shadow-sm">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Your Campaign History</h1>
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Video</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Uploaded</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Views</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Watch Time (Mins)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- History rows will be dynamically inserted here by js/history.js -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Loader to show while data is being fetched -->
+            <div id="loader" class="text-center p-8">
+                <i class="fas fa-spinner fa-spin text-4xl text-indigo-600"></i>
+                <p class="mt-2 text-gray-500">Loading your history...</p>
+            </div>
+            <!-- Message to show if the user has no history -->
+             <div id="no-history" class="text-center p-8 hidden">
+                <p class="text-gray-500">You haven't created any campaigns yet.</p>
+                <a href="upload.html" class="mt-4 inline-block bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition">Create One Now</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- This script will fetch and display the user's campaign history -->
+    <script type="module" src="js/history.js"></script>
+    <!-- We also need the auth script for the logout button to work -->
+    <script type="module" src="js/auth.js"></script>
+</body>
+</html>
