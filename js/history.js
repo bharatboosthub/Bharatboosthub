@@ -1,5 +1,5 @@
 // FILE: js/history.js
-// FINAL FIX: This version now uses a secure database function (RPC) to fetch history.
+// FINAL FIX v2: This version will display the exact database error on the screen.
 
 import { supabase } from './supabase.js';
 import { protectPage } from './auth.js';
@@ -13,16 +13,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     const noHistoryEl = document.getElementById('no-history');
 
     const fetchHistory = async () => {
-        // --- NEW: Call the database function using .rpc() ---
-        // This is a single, simple, and secure call.
+        // This is a single, simple, and secure call to our database function.
         const { data: videos, error } = await supabase
             .rpc('get_user_campaign_history');
 
         if (loaderEl) loaderEl.style.display = 'none';
 
         if (error) {
-            console.error('Error fetching history:', error.message);
-            historyTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-red-500">Could not load your campaign history. Please check console for errors.</td></tr>`;
+            // --- NEW: Display the specific error message directly on the page ---
+            console.error('Error fetching history:', error); // Keep logging for our records
+            historyTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center p-4 text-red-500">
+                        <p class="font-bold">Failed to load history. The database returned this error:</p>
+                        <p class="mt-2 font-mono text-xs">${error.message}</p>
+                    </td>
+                </tr>
+            `;
             return;
         }
 
@@ -33,7 +40,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         videos.forEach(video => {
             const date = new Date(video.created_at).toLocaleDateString();
-            // The view count now comes directly from the function's result
             const viewsCount = video.view_count || 0;
             const watchTime = viewsCount * 3;
 
