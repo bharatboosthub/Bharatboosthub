@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const videoUrl = document.getElementById('video-url').value.trim();
 
-        // --- FIXED: More robust YouTube URL validation ---
-        // This regular expression checks for various valid YouTube URL formats.
-        const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+        // --- FINAL FIX: This regex correctly handles all standard YouTube URL formats,
+        // including those with extra query parameters like '?si=' or '&t='.
+        const youtubeRegex = /^(https?:\/\/)?(www\.)?(m\.)?(youtube\.com|youtu\.be)\/(watch\?v=|shorts\/|embed\/)?([\w-]{11})/;
         if (!youtubeRegex.test(videoUrl)) {
             showMessage('Please enter a valid YouTube video URL.', true);
             resetButton();
